@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { Navigation, TentTree } from "lucide-react";
+import { ChurchIcon, Navigation, Radar, TentTree, Users } from "lucide-react";
 import Image from "next/image";
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
         </div>
         
         {/* Notify */}
-       <div className="border-2 border-purple-600 p-4 mt-10 rounded-md bg-gradient-to-r from-purple-500 to-purple-700 shadow-lg">
+  <div className="border-2 border-purple-600 p-4 mt-10 rounded-md bg-gradient-to-r from-purple-500 to-purple-700 shadow-lg">
       <div className="flex items-center justify-between h-[20svh]">
         <div className="flex items-center space-x-4 text-white">
           <TentTree className="h-6 w-6" />
@@ -39,7 +39,7 @@ export default function Home() {
         {/* Data */}
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
           
-  <div className="border-2 border-neutral-100 p-4 mt-10 rounded-md bg-gradient-to-r from-neutral-200 to-neutral-100 shadow-lg">
+  <div className="p-4 mt-10 rounded-md bg-gradient-to-r from-neutral-200 to-neutral-100 shadow-lg">
       <div className="flex items-center justify-between h-[20svh]">
         <div className="flex items-center space-x-4 text-black">
           <Navigation className="h-6 w-6" />
@@ -56,10 +56,10 @@ export default function Home() {
       <div className="border-yellow-600 mt-10 bg-gradient-to-r from-yellow-500 to-yellow-700 shadow-lg w-full h-2 rounded-full"></div>
   </div>
   
-  <div className="border-2 border-neutral-100 p-4 mt-10 rounded-md bg-gradient-to-r from-neutral-200 to-neutral-100 shadow-lg">
+  <div className="p-4 mt-10 rounded-md bg-gradient-to-r from-neutral-200 to-neutral-100 shadow-lg">
       <div className="flex items-center justify-between h-[20svh]">
         <div className="flex items-center space-x-4 text-black">
-          <Navigation className="h-6 w-6" />
+          <ChurchIcon className="h-6 w-6" />
           <div>
             <h2 className="text-3xl font-bold">Fellowhips</h2>
             <p className="text-purple-900">(See all)</p>
@@ -73,10 +73,10 @@ export default function Home() {
       <div className="border-red-600 mt-10 bg-gradient-to-r from-red-500 to-red-700 shadow-lg w-full h-2 rounded-full"></div>
   </div>
 
-   <div className="border-2 border-neutral-100 p-4 mt-10 rounded-md bg-gradient-to-r from-neutral-200 to-neutral-100 shadow-lg">
+   <div className="p-4 mt-10 rounded-md bg-gradient-to-r from-neutral-200 to-neutral-100 shadow-lg">
       <div className="flex items-center justify-between h-[20svh]">
         <div className="flex items-center space-x-4 text-black">
-          <Navigation className="h-6 w-6" />
+          <Radar className="h-6 w-6" />
           <div>
             <h2 className="text-3xl font-bold">Cells</h2>
             <p className="text-purple-900">(See all)</p>
@@ -90,10 +90,10 @@ export default function Home() {
       <div className="border-green-600 mt-10 bg-gradient-to-r from-green-500 to-green-700 shadow-lg w-full h-2 rounded-full"></div>
           </div> 
 
-    <div className="border-2 border-neutral-100 p-4 mt-10 rounded-md bg-gradient-to-r from-neutral-200 to-neutral-100 shadow-lg">
+    <div className="p-4 mt-10 rounded-md bg-gradient-to-r from-neutral-200 to-neutral-100 shadow-lg">
       <div className="flex items-center justify-between h-[20svh]">
         <div className="flex items-center space-x-4 text-black">
-          <Navigation className="h-6 w-6" />
+          <Users className="h-6 w-6" />
           <div>
             <h2 className="text-3xl font-bold">Members</h2>
             <p className="text-purple-900">(See all)</p>
