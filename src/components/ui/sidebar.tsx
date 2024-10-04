@@ -1,0 +1,70 @@
+"use client"
+
+import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Home, Settings, Users, HelpCircle, Menu } from "lucide-react"
+
+const sidebarItems = [
+  { name: "Home", href: "/", icon: Home },
+  { name: "Users", href: "/users", icon: Users },
+  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Help", href: "/help", icon: HelpCircle },
+]
+
+export default function Sidebar() {
+  const [open, setOpen] = useState(false)
+  const pathname = usePathname()
+
+  return (
+    <>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <Button variant="outline" size="icon" className="lg:hidden fixed left-4 top-4 z-50">
+            <Menu className="h-4 w-4" />
+            <span className="sr-only">Toggle Sidebar</span>
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-[240px] p-0">
+          <SidebarContent pathname={pathname} />
+        </SheetContent>
+      </Sheet>
+      <aside className="hidden lg:flex h-screen w-[240px] flex-col fixed inset-y-0">
+        <SidebarContent pathname={pathname} />
+      </aside>
+    </>
+  )
+}
+
+function SidebarContent({ pathname }: { pathname: string }) {
+  return (
+    <div className="flex h-full flex-col border-r bg-background">
+      <div className="flex h-14 items-center border-b px-4">
+        <Link className="flex items-center gap-2 font-semibold" href="/">
+          {/* <Package2 className="h-6 w-6" /> */}
+          <span>Mystic Martyrs</span>
+        </Link>
+      </div>
+      <ScrollArea className="flex-1">
+        <nav className="flex flex-col gap-1 p-2">
+          {sidebarItems.map((item) => (
+            <Button
+              key={item.name}
+              asChild
+              variant={pathname === item.href ? "secondary" : "ghost"}
+              className="justify-start"
+            >
+              <Link href={item.href}>
+                <item.icon className="mr-2 h-4 w-4" />
+                {item.name}
+              </Link>
+            </Button>
+          ))}
+        </nav>
+      </ScrollArea>
+    </div>
+  )
+}
