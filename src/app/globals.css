@@ -72,7 +72,18 @@ body {
   * {
     @apply border-border;
   }
-  body {
+  /* .auth-body {
     @apply bg-background text-foreground;
+    @apply relative z-0;
+    background-image: linear-gradient(45deg, #ffffff 15%, #f8e7f2 85%);
+  } */
+
+  .auth-body::before {
+    content: "";
+    @apply absolute top-0 left-0 w-full h-full;
+    background-image: url("/images/men.png");
+    background-size: contain;
+    opacity: 1;
+    z-index: -1;
   }
 }

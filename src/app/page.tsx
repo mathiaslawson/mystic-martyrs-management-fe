@@ -1,5 +1,4 @@
-import { Separator } from "@/components/ui/separator";
-import { ChurchIcon, Navigation, Radar, TentTree, Users } from "lucide-react";
+import { ChurchIcon, Navigation, Radar, Users } from "lucide-react";
 import Image from "next/image";
 
 export default function Home() {
@@ -7,21 +6,22 @@ export default function Home() {
     <div className="">
       <div className="flex flex-col">
         <div className="flex h-5 items-center space-x-4 text-sm">
-          <h1 className="text-3xl font-light">Shalom, Mathias </h1>
-          <Separator orientation="vertical" />
-          <h1 className="text-1xl font-light border  border-purple-800 bg-purple-400 rounded-2xl px-6">Admin</h1>
+
         </div>
         
         {/* Notify */}
-  <div className="border-2 border-purple-600 p-4 mt-10 rounded-md bg-gradient-to-r from-purple-500 to-purple-700 shadow-lg">
+  <div className="border-2 border-purple-600 p-4 rounded-md bg-gradient-to-r from-purple-500 to-purple-700 shadow-lg">
       <div className="flex items-center justify-between h-[20svh]">
-        <div className="flex items-center space-x-4 text-white">
-          <TentTree className="h-6 w-6" />
+        <div className="flex items-center space-x-4 text-purple-200">
+        
           <div>
-            <h2 className="text-xl font-bold">Notifications</h2>
-            <p className="text-purple-200">You have 3 new notifications (See all)</p>
+                <h2 className="text-3xl font-bold text-white">Shalom,</h2>
+                <p className="font-light text-md mb-11">Mathias Prince Lawson</p>
+         
           </div>
+          
         </div>
+      
         <div className="hidden md:block">
           <Image
             src="/images/menorah.png"
