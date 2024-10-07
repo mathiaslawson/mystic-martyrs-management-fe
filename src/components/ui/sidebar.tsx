@@ -9,7 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Home, Settings, Users, HelpCircle, Menu, ArrowLeftIcon, Church, Radar, Navigation } from "lucide-react"
 
 const sidebarItems = [
-  { name: "Home", href: "/", icon: Home },
+  { name: "Home", href: "/home", icon: Home },
   { name: "Members", href: "/members", icon: Users },
   { name: "Fellowhips", href: "/fellowships", icon: Church },
   { name: "Zones", href: "/zones", icon: Navigation },
@@ -28,7 +28,7 @@ export default function Sidebar() {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="lg:hidden fixed left-4 top-4 z-50">
-            <Menu className="h-4 w-4" />
+            <Menu className="h-4 w-4 " />
             <span className="sr-only">Toggle Sidebar</span>
           </Button>
         </SheetTrigger>
@@ -45,7 +45,7 @@ export default function Sidebar() {
 
 function SidebarContent({ pathname }: { pathname: string }) {
   return (
-    <div className="flex h-full flex-col border-r bg-background">
+    <div className="flex h-full flex-col border-r bg-white">
       <div className="flex h-14 items-center border-b px-4">
         <Link className="flex items-center gap-2 font-semibold" href="/">
           {/* <Package2 className="h-6 w-6" /> */}

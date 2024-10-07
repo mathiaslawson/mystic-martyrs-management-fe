@@ -6,7 +6,7 @@ import Image from "next/image";
 
 function Home() {
   return (
-    <div className="xl:mt-[-1.6rem] mt-10">
+    <div className="">
       <div className="flex flex-col">
         <div className="flex h-5 items-center space-x-4 text-sm">
 
@@ -47,11 +47,11 @@ function Home() {
         <div className="flex items-center space-x-4 text-black">
           <Navigation className="h-6 w-6" />
           <div>
-            <h2 className="xl:text-3xl text-2xl font-bold">Zones</h2>
+            <h2 className="text-3xl font-bold">Zones</h2>
             <p className="text-purple-900">(See all)</p>
           </div>
       </div>           
-        <p className="text-purple-900 font-extrabold text-6xl mx-10">
+        <p className="text-purple-900 font-extrabold text-8xl mx-10">
           10
         </p>
       </div>
@@ -64,11 +64,11 @@ function Home() {
         <div className="flex items-center space-x-4 text-black">
           <ChurchIcon className="h-6 w-6" />
           <div>
-            <h2 className="xl:text-3xl text-2xl font-bold">Fellowhips</h2>
+            <h2 className="text-3xl font-bold">Fellowhips</h2>
             <p className="text-purple-900">(See all)</p>
           </div>
       </div>           
-        <p className="text-purple-900 font-extrabold text-6xl mx-10">
+        <p className="text-purple-900 font-extrabold text-8xl mx-10">
           10
         </p>
       </div>
@@ -81,11 +81,11 @@ function Home() {
         <div className="flex items-center space-x-4 text-black">
           <Radar className="h-6 w-6" />
           <div>
-            <h2 className="xl:text-3xl text-2xl font-bold">Cells</h2>
+            <h2 className="text-3xl font-bold">Cells</h2>
             <p className="text-purple-900">(See all)</p>
           </div>
       </div>           
-        <p className="text-purple-900 font-extrabold text-6xl mx-10">
+        <p className="text-purple-900 font-extrabold text-8xl mx-10">
           10
         </p>
       </div>
@@ -98,11 +98,11 @@ function Home() {
         <div className="flex items-center space-x-4 text-black">
           <Users className="h-6 w-6" />
           <div>
-            <h2 className="xl:text-3xl text-2xl font-bold">Members</h2>
+            <h2 className="text-3xl font-bold">Members</h2>
             <p className="text-purple-900">(See all)</p>
           </div>
       </div>           
-        <p className="text-purple-900 font-extrabold text-6xl mx-10">
+        <p className="text-purple-900 font-extrabold text-8xl mx-10">
           10
         </p>
       </div>
