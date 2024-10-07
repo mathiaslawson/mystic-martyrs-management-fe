@@ -1,6 +1,6 @@
 import { createSafeActionClient, DEFAULT_SERVER_ERROR_MESSAGE } from "next-safe-action";
 import { zodAdapter } from 'next-safe-action/adapters/zod'
-import {z} from 'zod'
+
 
 export class ActionError extends Error {}
 
@@ -18,11 +18,6 @@ export const actionClient = createSafeActionClient({
 
   // metadata_instance here
 
-  defineMetadataSchema() {
-    return z.object({
-      actionName: z.string(),
-    });
-  },
 }).use(async({next, metadata, clientInput, bindArgsClientInputs}) => {
   //logging middleware.
   const start = Date.now();
@@ -34,7 +29,7 @@ export const actionClient = createSafeActionClient({
 
   const durationInMs = end - start;
 
-  const logObject: Record<string, any> = { durationInMs };
+  const logObject: Record<string, unknown> = { durationInMs };
 
   logObject.clientInput = clientInput;
   logObject.bindArgsClientInputs = bindArgsClientInputs;
@@ -47,3 +42,5 @@ export const actionClient = createSafeActionClient({
 
   return result;
 });
+
+

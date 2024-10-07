@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { Eye, EyeOff, UserPlus, LogIn } from "lucide-react"
@@ -10,11 +10,22 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { loginUserAction, signUpUserAction } from "../actions/auth"
 import { useAction } from 'next-safe-action/hooks'
+import { toast } from "sonner"
+
+enum UserRole {
+  MEMBER = "MEMBER",
+  FELLOWSHIP_LEADER = "FELLOWSHIP_LEADER",
+  ZONE_LEADER = "ZONE_LEADER",
+  CELL_LEADER = "CELL_LEADER",
+  ADMIN = "ADMIN"
+}
 
 const roles = [
-  { id: "user", label: "User" },
-  { id: "manager", label: "Manager" },
-  { id: "admin", label: "Admin" },
+  { id: UserRole.MEMBER, label: "Member" },
+  { id: UserRole.FELLOWSHIP_LEADER, label: "Fellowship Leader" },
+  { id: UserRole.ZONE_LEADER, label: "Zone Leader" },
+  { id: UserRole.CELL_LEADER, label: "Cell Leader" },
+  { id: UserRole.ADMIN, label: "Admin" },
 ]
 
 type LoginInputs = {
@@ -23,10 +34,11 @@ type LoginInputs = {
 }
 
 type SignUpInputs = {
-  name: string
+  firstname: string
+  lastname: string
   email: string
   password: string
-  role: string
+  role: UserRole
 }
 
 export default function AuthPage() {
@@ -47,19 +59,41 @@ export default function AuthPage() {
   } = useForm<SignUpInputs>()
 
   const { execute: executeLogin, result: loginResult, isExecuting: isLoginExecuting } = useAction(loginUserAction)
-  const { execute: executeSignUp, result: signUpResult, isExecuting: isSignUpExecuting } = useAction(signUpUserAction)
+  const { execute: executeSignUp, isExecuting: isSignUpExecuting } = useAction(signUpUserAction)
 
   const onLoginSubmit: SubmitHandler<LoginInputs> = (data) => {
     console.log("Login form submitted", data)
     executeLogin(data)
-    router.push("/") 
   }
 
   const onSignUpSubmit: SubmitHandler<SignUpInputs> = (data) => {
     console.log("Sign up form submitted", data)
     executeSignUp(data)
-    // router.push("/") 
   }
+
+  const handleSuccessfulAuth = useCallback((message: string) => {
+    toast.success(message)
+    // Use setTimeout to delay the navigation
+    setTimeout(() => {
+      router.push("/home")
+    }, 100)
+  }, [router])
+
+  useEffect(() => {
+    if (loginResult?.data?.success === true) {
+      handleSuccessfulAuth("Login successful!")
+    } else if (loginResult?.data?.success === undefined) {
+      toast.error("Login failed")
+    }
+  }, [loginResult, handleSuccessfulAuth])
+
+  // useEffect(() => {
+  //   if (signUpResult?.data?.success === true) {
+  //     handleSuccessfulAuth("Sign up successful!")
+  //   } else if (signUpResult?.data?.success === false) {
+  //     toast.error(signUpResult.data.message || "Sign up failed")
+  //   }
+  // }, [signUpResult, handleSuccessfulAuth])
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -77,6 +111,7 @@ export default function AuthPage() {
                   type="email" 
                   placeholder="john@example.com" 
                   {...registerLogin("email", { required: "Email is required" })} 
+                  disabled={isLoginExecuting ? true : undefined}
                 />
                 {loginErrors.email && <span className="text-red-500 text-sm">{loginErrors.email.message}</span>}
               </div>
@@ -88,11 +123,14 @@ export default function AuthPage() {
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     {...registerLogin("password", { required: "Password is required" })}
+                    disabled={isLoginExecuting}
+                    
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-700"
+                    disabled={isLoginExecuting}
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
@@ -100,19 +138,37 @@ export default function AuthPage() {
                 {loginErrors.password && <span className="text-red-500 text-sm">{loginErrors.password.message}</span>}
               </div>
               <Button type="submit" className="w-full bg-purple-900" disabled={isLoginExecuting}>
-                {isLoginExecuting ? "Logging in..." : "Log In"}
+                {isLoginExecuting ? (
+                  <>
+                    <span className="loading loading-spinner loading-sm mr-2"></span>
+                    Logging in...
+                  </>
+                ) : (
+                  "Log In"
+                )}
               </Button>
             </form>
           ) : (
             <form onSubmit={handleSubmitSignUp(onSignUpSubmit)} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="signUpName">Full Name</Label>
+                <Label htmlFor="signUpFirstName">First Name</Label>
                 <Input 
-                  id="signUpName" 
-                  placeholder="John Doe" 
-                  {...registerSignUp("name", { required: "Name is required" })} 
+                  id="signUpFirstName" 
+                  placeholder="John" 
+                  {...registerSignUp("firstname", { required: "First name is required" })} 
+                  disabled={isSignUpExecuting}
                 />
-                {signUpErrors.name && <span className="text-red-500 text-sm">{signUpErrors.name.message}</span>}
+                {signUpErrors.firstname && <span className="text-red-500 text-sm">{signUpErrors.firstname.message}</span>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="signUpLastName">Last Name</Label>
+                <Input 
+                  id="signUpLastName" 
+                  placeholder="Doe" 
+                  {...registerSignUp("lastname", { required: "Last name is required" })} 
+                  disabled={isSignUpExecuting}
+                />
+                {signUpErrors.lastname && <span className="text-red-500 text-sm">{signUpErrors.lastname.message}</span>}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="signUpEmail">Email</Label>
@@ -121,6 +177,7 @@ export default function AuthPage() {
                   type="email" 
                   placeholder="john@example.com" 
                   {...registerSignUp("email", { required: "Email is required" })} 
+                  disabled={isSignUpExecuting}
                 />
                 {signUpErrors.email && <span className="text-red-500 text-sm">{signUpErrors.email.message}</span>}
               </div>
@@ -132,11 +189,13 @@ export default function AuthPage() {
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     {...registerSignUp("password", { required: "Password is required" })}
+                    disabled={isSignUpExecuting}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-700"
+                    disabled={isSignUpExecuting}
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
@@ -145,13 +204,14 @@ export default function AuthPage() {
               </div>
               <div className="space-y-2">
                 <Label>Role</Label>
-                <RadioGroup defaultValue="user" className="flex space-x-4">
+                <RadioGroup defaultValue={UserRole.MEMBER} className="flex flex-wrap gap-4">
                   {roles.map((role) => (
                     <div key={role.id} className="flex items-center space-x-2">
                       <RadioGroupItem 
                         value={role.id} 
                         id={role.id} 
                         {...registerSignUp("role", { required: "Role is required" })} 
+                        disabled={isSignUpExecuting}
                       />
                       <Label htmlFor={role.id}>{role.label}</Label>
                     </div>
@@ -160,7 +220,14 @@ export default function AuthPage() {
                 {signUpErrors.role && <span className="text-red-500 text-sm">{signUpErrors.role.message}</span>}
               </div>
               <Button type="submit" className="w-full bg-purple-900" disabled={isSignUpExecuting}>
-                {isSignUpExecuting ? "Signing up..." : "Sign Up"}
+                {isSignUpExecuting ? (
+                  <>
+                    <span className="loading loading-spinner loading-sm mr-2"></span>
+                    Signing up...
+                  </>
+                ) : (
+                  "Sign Up"
+                )}
               </Button>
             </form>
           )}

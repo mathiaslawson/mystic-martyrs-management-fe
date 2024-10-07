@@ -69,14 +69,7 @@ body {
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  /* .auth-body {
-    @apply bg-background text-foreground;
-    @apply relative z-0;
-    background-image: linear-gradient(45deg, #ffffff 15%, #f8e7f2 85%);
-  } */
+ 
 
   .auth-body::before {
     content: "";
