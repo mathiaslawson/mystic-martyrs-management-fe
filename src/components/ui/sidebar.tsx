@@ -45,7 +45,7 @@ export default function Sidebar() {
 
 function SidebarContent({ pathname }: { pathname: string }) {
   return (
-    <div className="flex h-full flex-col border-r bg-white">
+    <div className="flex h-full flex-col border-r bg-neutral-100 text-black">
       <div className="flex h-14 items-center border-b px-4">
         <Link className="flex items-center gap-2 font-semibold" href="/">
           {/* <Package2 className="h-6 w-6" /> */}
