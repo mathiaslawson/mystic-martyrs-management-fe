@@ -1,26 +1,25 @@
 'use client'
 
-import { withAuth } from "@/components/hoc/withAuth";
-import { useAction } from "next-safe-action/hooks";
-import { useEffect } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { getAllZones } from "../actions/zones";
-import { Loader } from "lucide-react";
-
-import { Card, CardContent } from "@/components/ui/card";
+import { withAuth } from "@/components/hoc/withAuth"
+import { useAction } from "next-safe-action/hooks"
+import { useEffect } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import { getAllZones } from "../actions/zones"
+import { Loader } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { AddZoneModal } from "./AddZoneModal"
 
 function Home() {
-  const { execute: getZones, result: zones, status } = useAction(getAllZones);
+  const { execute: getZones, result: zones, status } = useAction(getAllZones)
 
   useEffect(() => {
-    getZones();
-  }, [getZones]);
+    getZones()
+  }, [getZones])
 
- 
-
-
-  console.log(zones?.data?.data, 'these is zone')
+  const handleZoneAdded = () => {
+    getZones()
+  }
 
   return (
     <div className="xl:mt-[-1.6rem] mt-10">
@@ -46,6 +45,11 @@ function Home() {
               />
             </div>
           </div>
+        </div>
+
+        {/* Add Zone Button */}
+        <div className="mt-4 mb-6">
+          <AddZoneModal onZoneAdded={handleZoneAdded} />
         </div>
 
         {/* Data */}
@@ -79,7 +83,7 @@ function Home() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default withAuth(Home);
+export default withAuth(Home)
