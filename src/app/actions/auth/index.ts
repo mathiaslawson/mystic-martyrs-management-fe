@@ -1,7 +1,7 @@
 "use server"
 
 import { actionClient } from "@/lib/safe-action"
-import { LoginAuthSchema } from "@/schemas/auth"
+import { LoginAuthSchema, RegisterAuthSchema } from "@/schemas/auth"
 import { flattenValidationErrors } from "next-safe-action"
 import { cookies } from 'next/headers'
 
@@ -50,21 +50,30 @@ export const loginUserAction = actionClient
 
 
 export const signUpUserAction = actionClient
-  .schema(LoginAuthSchema, {
+  .schema(RegisterAuthSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async ({ parsedInput: { email, password } }) => {
-    await fetch(`https://churchbackend-management.onrender.com`, {
-      method: "POST",
-     
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
+  .action(async({ parsedInput: { email, password, role, firstname, lastname  } }) => {
+    const response = await fetch(
+      `https://churchbackend-management.onrender.com/api/v1/auth/register`,
+      {
+        method: "POST",
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          firstname: firstname,
+          lastname: lastname,
+          role: role,
+        }),
+      }
+    );
 
-    return { message: "Successfully logged in" };
+    return response.json();
   });
 
 
