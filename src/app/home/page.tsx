@@ -1,10 +1,21 @@
 
 'use client'
+import { useAuth } from "@/components/hoc/AuthContext";
 import { withAuth } from "@/components/hoc/withAuth";
 import { ChurchIcon, Navigation, Radar, Users } from "lucide-react";
 import Image from "next/image";
 
 function Home() {
+
+
+  const { accountData } = useAuth()
+
+  if (!accountData) {
+    return <div>Loading...</div>
+  }
+
+  console.log(accountData, 'acc')
+
   return (
     <div className="xl:mt-[-1.6rem] mt-10">
       <div className="flex flex-col">

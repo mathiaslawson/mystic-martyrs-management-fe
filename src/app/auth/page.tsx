@@ -98,7 +98,7 @@ export default function AuthPage() {
     if (loginResult?.data?.success === true) {
       handleSuccessfulAuth("Login successful!")
     } else if (loginResult?.data?.success === undefined) {
-      toast.error("Login failed")
+      toast.error(loginResult?.data?.message)
     }
   }, [loginResult, handleSuccessfulAuth])
 

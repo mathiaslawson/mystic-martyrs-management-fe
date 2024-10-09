@@ -1,5 +1,6 @@
 "use server"
 
+import { getCookie } from "@/lib/get-cookie"
 import { actionClient } from "@/lib/safe-action"
 import { LoginAuthSchema, RegisterAuthSchema } from "@/schemas/auth"
 import { flattenValidationErrors } from "next-safe-action"
@@ -79,14 +80,11 @@ export const signUpUserAction = actionClient
 
 // check session 
 export const checkSessionAction = actionClient.action(async () => {
-  
   const cookieStore = cookies();
   const token = cookieStore.get("access_token")?.value; 
-
   if (!token) {
     throw new Error("User not authenticated"); 
   }
-
   // Now you can use the token in your fetch request
   const response = await fetch(
     `https://churchbackend-management.onrender.com/api/v1/auth/me`,
@@ -99,10 +97,42 @@ export const checkSessionAction = actionClient.action(async () => {
       },
     }
   );
-
   if (!response.ok) {
     throw new Error("Session check failed"); 
   }
-
   return await response.json();
+});
+
+
+// get all members 
+export const getAllMembersAction = actionClient.action(async () => {
+  const response = await fetch(
+    `https://churchbackend-management.onrender.com/api/v1/users`,
+    {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${getCookie()}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+   return response.json();
+});
+
+
+// get all members 
+export const getAccountDataAction = actionClient.action(async () => {
+  const response = await fetch(
+    `https://churchbackend-management.onrender.com/api/v1/auth/me`,
+    {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${getCookie()}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+   return response.json();
 });
