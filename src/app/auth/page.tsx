@@ -1,18 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { Eye, EyeOff, UserPlus, LogIn, Loader } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { fireOAuth, loginUserAction, signUpUserAction, url } from "../actions/auth";
-import { useAction } from "next-safe-action/hooks";
-import { toast } from "sonner";
-import Link from "next/link";
+
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
-  const router = useRouter();
+ 
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
