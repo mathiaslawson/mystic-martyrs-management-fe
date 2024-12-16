@@ -1,12 +1,12 @@
-"use server"
+"use server";
 
-import { getCookie } from "@/lib/get-cookie"
-import { actionClient } from "@/lib/safe-action"
-import { LoginAuthSchema, RegisterAuthSchema } from "@/schemas/auth"
-import { flattenValidationErrors } from "next-safe-action"
-import { cookies } from 'next/headers'
+import { getCookie } from "@/lib/get-cookie";
+import { actionClient } from "@/lib/safe-action";
+import { LoginAuthSchema, RegisterAuthSchema } from "@/schemas/auth";
+import { flattenValidationErrors } from "next-safe-action";
+import { cookies } from "next/headers";
 
-
+export const url = `https://churchbackend-management.onrender.com/`;
 
 export const loginUserAction = actionClient
   .schema(LoginAuthSchema, {
@@ -49,42 +49,46 @@ export const loginUserAction = actionClient
     return data;
   });
 
-
 export const signUpUserAction = actionClient
   .schema(RegisterAuthSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async({ parsedInput: { email, password, role, firstname, lastname  } }) => {
-    const response = await fetch(
-      `https://churchbackend-management.onrender.com/api/v1/auth/register`,
-      {
-        method: "POST",
-        credentials: 'include',
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          firstname: firstname,
-          lastname: lastname,
-          role: role,
-        }),
-      }
-    );
+  .action(
+    async ({ parsedInput: { email, password, role, firstname, lastname } }) => {
+      const response = await fetch(
+        `https://churchbackend-management.onrender.com/api/v1/auth/register`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+            firstname: firstname,
+            lastname: lastname,
+            role: role,
+          }),
+        }
+      );
 
-    return response.json();
-  });
+      return response.json();
+    }
+  );
 
-
-// check session 
+// check session
 export const checkSessionAction = actionClient.action(async () => {
   const cookieStore = cookies();
-  const token = cookieStore.get("access_token")?.value; 
+  const token = cookieStore.get("access_token")?.value;
   if (!token) {
-    throw new Error("User not authenticated"); 
+    throw new Error("User not authenticated");
   }
+
+  // call login from here 
+
+
   // Now you can use the token in your fetch request
   const response = await fetch(
     `https://churchbackend-management.onrender.com/api/v1/auth/me`,
@@ -92,19 +96,18 @@ export const checkSessionAction = actionClient.action(async () => {
       method: "GET",
       credentials: "include",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${document.cookie.split("=")[1]}`,
         "Content-Type": "application/json",
       },
     }
   );
   if (!response.ok) {
-    throw new Error("Session check failed"); 
+    throw new Error("Session check failed");
   }
   return await response.json();
 });
 
-
-// get all members 
+// get all members
 export const getAllMembersAction = actionClient.action(async () => {
   const response = await fetch(
     `https://churchbackend-management.onrender.com/api/v1/users`,
@@ -117,11 +120,10 @@ export const getAllMembersAction = actionClient.action(async () => {
       },
     }
   );
-   return response.json();
+  return response.json();
 });
 
-
-// get all members 
+// get all members
 export const getAccountDataAction = actionClient.action(async () => {
   const response = await fetch(
     `https://churchbackend-management.onrender.com/api/v1/auth/me`,
@@ -134,5 +136,28 @@ export const getAccountDataAction = actionClient.action(async () => {
       },
     }
   );
-   return response.json();
+  return response.json();
+});
+
+// OAuth
+export const fireOAuth = (async () => {
+  console.log("OUarh init");
+
+  try {
+    const res = await fetch(
+      `${url}api/v1/auth/invite/04027a3d-ba5e-4c40-91e5-58f651cedc5d`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+  
+    return res.json();
+  } catch (e) {
+    console.log(e, 'this is what happened');
+  }
 });
