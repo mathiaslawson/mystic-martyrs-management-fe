@@ -49,7 +49,7 @@ export const loginUserAction = actionClient
     return data;
   });
 
-export const signUpUserAction = actionClient
+export const  signUpUserAction =  actionClient
   .schema(RegisterAuthSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,

@@ -1,27 +1,28 @@
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
-
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
- 
+
+  const handleGoogleLogin = async () => {
+    // Redirect to backend Google OAuth endpoint
+    window.location.href = `https://churchbackend-management.onrender.com/api/v1/auth/invite/04027a3d-ba5e-4c40-91e5-58f651cedc5d`;
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl overflow-hidden max-w-md w-full">
         <div className="p-8">
-          <p className="flex justify-center"> Hey there Mystic</p>
-
+          <p className="flex justify-center">Hey there Mystic</p>
           <form>
             <div className="mt-8 mb-5">
-              {/* <a href={`${url}api/v1/auth/invite/04027a3d-ba5e-4c40-91e5-58f651cedc5d`}>
-              <Button className="bg-purple-700 text-white w-full" type='button' >
-                Continue with Google
+              <Button 
+                type="button"
+                onClick={handleGoogleLogin}
+              >
+                Startup With Google
               </Button>
-              </a> */}
-              
             </div>
           </form>
         </div>
