@@ -6,7 +6,7 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
 
   const handleGoogleLogin = async () => {
-    // Redirect to backend Google OAuth endpoint
+  
     window.location.href = `https://churchbackend-management.onrender.com/api/v1/auth/invite/04027a3d-ba5e-4c40-91e5-58f651cedc5d`;
   };
 
