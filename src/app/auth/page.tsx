@@ -7,7 +7,7 @@ export default function AuthPage() {
 
   const handleGoogleLogin = async () => {
   
-    window.location.href = `https://mystic-be.vercel.app/api/v1/auth/invite/04027a3d-ba5e-4c40-91e5-58f651cedc5d`;
+    window.location.href = `https://mystic-be.vercel.app/v1/auth/invite/04027a3d-ba5e-4c40-91e5-58f651cedc5d`;
   };
 
   return (
