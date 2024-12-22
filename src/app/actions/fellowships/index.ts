@@ -12,7 +12,7 @@ export const getAllFellowships = actionClient.action(async () => {
   }
 
   const response = await fetch(
-    `https://churchbackend-management.onrender.com/api/v1/fellowships`,
+    `https://mystic-be.vercel.app/api/v1/fellowships`,
     {
       method: "GET",
       credentials: "include",
