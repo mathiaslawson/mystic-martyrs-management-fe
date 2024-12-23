@@ -16,7 +16,7 @@ export const getAllCells = actionClient.action(async () => {
       method: "GET",
       credentials: "include",
       headers: {
-        Authorization: `Bearer ${getCookie()}`,
+        Authorization:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNlbGFzaXNlcGVudTVAZ21haWwuY29tIiwic3ViIjoiMWNkZDg2NzktNWYxOS00ZDkyLWFkZjUtYWZkZWI0Yzg0ZDZjIiwicm9sZSI6IlpPTkVfTEVBREVSIiwiaWF0IjoxNzM0OTEwMTg2LCJleHAiOjE3MzQ5MTM3ODZ9.tdGKMb29hKdJS5L4rGxFrPdYWckSeHzYuUTqTfbScos",
         "Content-Type": "application/json",
       },
     }

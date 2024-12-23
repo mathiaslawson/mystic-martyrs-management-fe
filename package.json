@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@lottiefiles/dotlottie-react": "^0.12.0",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",
@@ -19,11 +20,13 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.1",
+    "axios": "^1.7.9",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cookie": "^0.7.1",
-    "framer-motion": "^11.11.1",
+    "framer-motion": "^11.15.0",
     "http-proxy-middleware": "^3.0.2",
+    "js-cookie": "^3.0.5",
     "lucide-react": "^0.447.0",
     "mystic-online-fe": "file:",
     "next": "14.2.14",
@@ -41,6 +44,7 @@
   "devDependencies": {
     "@types/cookie": "^0.6.0",
     "@types/http-proxy-middleware": "^0.19.3",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

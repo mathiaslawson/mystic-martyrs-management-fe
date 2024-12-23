@@ -1,53 +1,35 @@
 'use client';
 
-import { checkSessionAction } from "@/app/actions/auth";
-import { useAction } from "next-safe-action/hooks";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { FlipWords } from "../ui/flip-words";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie'; // Use js-cookie for client-side cookie management
 
 export function withAuth<T extends object>(WrappedComponent: React.ComponentType<T>) {
   return function WithAuth(props: T) {
     const router = useRouter();
-    const { execute, result, status } = useAction(checkSessionAction);
     const [isLoading, setIsLoading] = useState(true);
-
-    const words = ["Online"];
     
+    // Check if access_token exists in cookies
     useEffect(() => {
-      const checkSession = async () => {
-        if (status === 'idle') {
-           execute();
-        }
-      };
-
-      checkSession();
-    }, [execute, status]);
-
-    useEffect(() => {
-      if (status === 'hasSucceeded') {
-        if (result.data?.statusCode === 401) {
-          router.push('/auth');
-        } else {
-          setIsLoading(false);
-        }
-      } else if (status === 'hasErrored') {
-        console.error('Authentication check failed:', result);
-        setTimeout(() => {
-          router.push('/auth');
-        }, 3000);
+      const accessToken = Cookies.get('access_token'); // Retrieve token using js-cookie
+      if (accessToken) {
+        setIsLoading(false); // User is authenticated, stop loading
+      } else {
+        // No access token, redirect to the OAuth login page
+        router.push('/auth')
       }
-    }, [result, status, router]);
+    }, []);
 
-    if (!isLoading && result.data && result.data.statusCode !== 401) {
-      return <WrappedComponent {...props} />;
+    if (isLoading) {
+      return (
+        <div className="flex flex-col justify-center items-center h-screen font-bold text-black-900 text-3xl px-5 md:px-10">
+          <span className="loader-book"></span>
+          <h1 className="text-center">Mystic-Martyrs-Management</h1>
+        </div>
+      );
     }
 
-    return (
-      <div className="flex justify-center items-center h-screen font-bold text-purple-900 text-3xl">
-        <Image src="/gifs/loader.gif" alt="loading" width={100} height={100} /> Mystic <FlipWords words={words} />
-      </div>
-    );
+    // If authenticated, render the WrappedComponent
+    return <WrappedComponent {...props} />;
   };
 }
