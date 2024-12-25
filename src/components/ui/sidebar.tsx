@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Home, Settings, Users, HelpCircle, Menu, ArrowLeftIcon, Church, Radar, Navigation } from "lucide-react"
+import { Home, Settings, Users, HelpCircle, Menu, ArrowLeftIcon, Church, Radar, Navigation, UserRoundPlus } from "lucide-react"
 
 const sidebarItems = [
   { name: "Home", href: "/home", icon: Home },
@@ -14,9 +14,10 @@ const sidebarItems = [
   { name: "Fellowhips", href: "/fellowships", icon: Church },
   { name: "Zones", href: "/zones", icon: Navigation },
   { name: "Cells", href: "/cells", icon: Radar },
+  { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Settings", href: "/settings", icon: Settings },
   { name: "Help", href: "/help", icon: HelpCircle },
-  { name: "Logout", href: "/help", icon: ArrowLeftIcon },
+  { name: "Logout", href: "/help", icon: ArrowLeftIcon }
 ]
 
 export default function Sidebar() {

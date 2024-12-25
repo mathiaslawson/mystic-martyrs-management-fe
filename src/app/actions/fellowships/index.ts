@@ -1,28 +1,32 @@
 "use server";
-import { getCookie } from "@/lib/get-cookie";
+import { getCookie } from "@/lib/get-cookie"; // Make sure this is correctly imported from your utility file
 import { actionClient } from "@/lib/safe-action";
 import { CreateFellowship, FellowshipByID, UpdateFellowship } from "@/schemas/fellowship";
 import { flattenValidationErrors } from "next-safe-action";
 
-// get all fellowhips
-export const getAllFellowships = actionClient.action(async () => {
- 
-  if (!getCookie()) {
+// Helper function to get authorization token from the cookie
+const getAuthHeader = () => {
+  const token = getCookie("access_token"); // Use your cookie name here, if it's different
+  if (!token) {
     throw new Error("User not authenticated");
   }
+  return `Bearer ${token}`;
+};
 
+// Get all fellowships
+export const getAllFellowships = actionClient.action(async () => {
   const response = await fetch(
     `https://mystic-be.vercel.app/api/v1/fellowships`,
     {
       method: "GET",
       credentials: "include",
       headers: {
-        Authorization:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNlbGFzaXNlcGVudTVAZ21haWwuY29tIiwic3ViIjoiMWNkZDg2NzktNWYxOS00ZDkyLWFkZjUtYWZkZWI0Yzg0ZDZjIiwicm9sZSI6IlpPTkVfTEVBREVSIiwiaWF0IjoxNzM0OTEwMTg2LCJleHAiOjE3MzQ5MTM3ODZ9.tdGKMb29hKdJS5L4rGxFrPdYWckSeHzYuUTqTfbScos",
+        Authorization: getAuthHeader(),
         "Content-Type": "application/json",
       },
     }
   );
-// `Bearer ${getCookie()}`
+
   if (!response.ok) {
     throw new Error("Session check failed");
   }
@@ -30,20 +34,19 @@ export const getAllFellowships = actionClient.action(async () => {
   return await response.json();
 });
 
-//getFellowship by ID
+// Get Fellowship by ID
 export const getFellowshipByID = actionClient
   .schema(FellowshipByID, {
-    handleValidationErrorsShape: (ve) =>
-      flattenValidationErrors(ve).fieldErrors,
+    handleValidationErrorsShape: (ve) => flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { id } }) => {
     const response = await fetch(
-      `https://churchbackend-management.onrender.com/api/v1/fellowships/${id}`,
+      `https://mystic-be.vercel.app/api/v1/fellowships/${id}`,
       {
         method: "GET",
         credentials: "include",
         headers: {
-          Authorization: `Bearer ${getCookie()}`,
+          Authorization: getAuthHeader(),
           "Content-Type": "application/json",
         },
       }
@@ -52,29 +55,28 @@ export const getFellowshipByID = actionClient
     return await response.json();
   });
 
-// update Fellowship
+// Update Fellowship
 export const updateFellowship = actionClient
   .schema(UpdateFellowship, {
-    handleValidationErrorsShape: (ve) =>
-      flattenValidationErrors(ve).fieldErrors,
+    handleValidationErrorsShape: (ve) => flattenValidationErrors(ve).fieldErrors,
   })
   .action(
     async ({
       parsedInput: { id, fellowship_leader_id, fellowship_name },
     }) => {
       const response = await fetch(
-        `https://churchbackend-management.onrender.com/api/v1/fellowships/${id}`,
+        `https://mystic-be.vercel.app/api/v1/fellowships/${id}`,
         {
           method: "PATCH",
           credentials: "include",
           headers: {
-            Authorization: `Bearer ${getCookie()}`,
+            Authorization: getAuthHeader(),
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-              fellowship_leader_id, 
-              fellowship_name, 
-              fellowship_id: id
+            fellowship_leader_id,
+            fellowship_name,
+            fellowship_id: id,
           }),
         }
       );
@@ -82,20 +84,19 @@ export const updateFellowship = actionClient
     }
   );
 
-// delete fellowship
+// Delete Fellowship
 export const deleteFellowship = actionClient
   .schema(FellowshipByID, {
-    handleValidationErrorsShape: (ve) =>
-      flattenValidationErrors(ve).fieldErrors,
+    handleValidationErrorsShape: (ve) => flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { id } }) => {
     const response = await fetch(
-      `https://churchbackend-management.onrender.com/api/v1/fellowships/${id}`,
+      `https://mystic-be.vercel.app/api/v1/fellowships/${id}`,
       {
         method: "DELETE",
         credentials: "include",
         headers: {
-          Authorization: `Bearer ${getCookie()}`,
+          Authorization: getAuthHeader(),
           "Content-Type": "application/json",
         },
       }
@@ -103,23 +104,22 @@ export const deleteFellowship = actionClient
     return response.json();
   });
 
-// create fellowship
+// Create Fellowship
 export const addFellowship = actionClient
   .schema(CreateFellowship, {
-    handleValidationErrorsShape: (ve) =>
-      flattenValidationErrors(ve).fieldErrors,
+    handleValidationErrorsShape: (ve) => flattenValidationErrors(ve).fieldErrors,
   })
   .action(
     async ({
       parsedInput: { fellowship_name, zone_id, fellowship_leader_id },
     }) => {
       const response = await fetch(
-        `https://churchbackend-management.onrender.com/api/v1/fellowships`,
+        `https://mystic-be.vercel.app/api/v1/fellowships`,
         {
           method: "POST",
           credentials: "include",
           headers: {
-            Authorization: `Bearer ${getCookie()}`,
+            Authorization: getAuthHeader(),
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -133,14 +133,15 @@ export const addFellowship = actionClient
     }
   );
 
+// Get Fellowship Leaders
 export const getFellowshipLeaders = actionClient.action(async () => {
   const response = await fetch(
-    `https://churchbackend-management.onrender.com/api/v1/users`,
+    `https://mystic-be.vercel.app/api/v1/users`,
     {
       method: "GET",
       credentials: "include",
       headers: {
-        Authorization: `Bearer ${getCookie()}`,
+        Authorization: getAuthHeader(),
         "Content-Type": "application/json",
       },
     }
@@ -148,12 +149,9 @@ export const getFellowshipLeaders = actionClient.action(async () => {
 
   const data = await response.json();
 
-  console.log(data, "the data that came out");
-
   const fellowshipLeaders = data?.data?.filter(
     (item: { role: string }) => item.role === "FELLOWSHIP_LEADER"
   );
-
 
   return fellowshipLeaders;
 });

@@ -8,18 +8,19 @@ export function withAuth<T extends object>(WrappedComponent: React.ComponentType
   return function WithAuth(props: T) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
-    
+
     // Check if access_token exists in cookies
     useEffect(() => {
       const accessToken = Cookies.get('access_token'); // Retrieve token using js-cookie
       if (accessToken) {
         setIsLoading(false); // User is authenticated, stop loading
       } else {
-        // No access token, redirect to the OAuth login page
-        router.push('/auth')
+        // No access token, immediately redirect to the OAuth login page
+        router.push('/auth');
       }
-    }, []);
+    }, [router]); // Ensure router is included in the dependency array
 
+    // Show loading state until authentication check is done
     if (isLoading) {
       return (
         <div className="flex flex-col justify-center items-center h-screen font-bold text-black-900 text-3xl px-5 md:px-10">

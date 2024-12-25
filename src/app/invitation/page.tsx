@@ -1,8 +1,9 @@
 "use client";
+import { withAuth } from "@/components/hoc/withAuth";
 import React, { useState } from "react";
 import { toast } from "sonner"
 
-const Page = () => {
+const Invitation = () => {
   enum UserRole {
     MEMBER = "MEMBER",
     FELLOWSHIP_LEADER = "FELLOWSHIP_LEADER",
@@ -52,17 +53,17 @@ const Page = () => {
       setLoading(true);
       await navigator.clipboard.writeText(finalUrl);
       setLoading(false);
-      alert("Invitation link generated and copied to clipboard!");
+      toast.success("Invitation link generated and copied to clipboard!");
     } catch (err) {
       setLoading(false);
-      alert("Failed to copy the invitation link. Please try again.");
+      toast.error("Failed to copy the invitation link. Please try again.");
     }
   };
 
   const renderConditionalContent = () => {
     if (role === UserRole.MEMBER || role === UserRole.CELL_LEADER) {
       return (
-        <div className="flex flex-col justify-center items-start w-96">
+        <div className="flex flex-col justify-start items-start w-full">
           <label htmlFor="cell">Cell of Invitation</label>
           <select
             name="cell"
@@ -79,7 +80,7 @@ const Page = () => {
       );
     } else if (role === UserRole.FELLOWSHIP_LEADER) {
       return (
-        <div className="flex flex-col justify-center items-start w-96">
+        <div className="flex flex-col justify-center items-start w-full">
           <label htmlFor="fellowship">Fellowship of Invitation</label>
           <select
             name="fellowship"
@@ -96,7 +97,7 @@ const Page = () => {
       );
     } else if (role === UserRole.ZONE_LEADER) {
       return (
-        <div className="flex flex-col justify-center items-start w-96">
+        <div className="flex flex-col justify-center items-start w-full">
           <label htmlFor="zone">Zone of Invitation</label>
           <select
             name="zone"
@@ -117,13 +118,16 @@ const Page = () => {
   };
 
   return (
-    <main className="flex flex-col justify-center items-start md:items-center py-24 px-10">
+    <main className="h-screen w-full px-24 bg-white flex flex-col justify-center items-start ">
       <h1 className="text-3xl font-semibold">Invitation</h1>
-      <p className="font-DMSans md:w-3/4 text-justify md:text-center">
+      <p className="font-DMSans md:w-3/4 text-justify">
         Please select the appropriate parameters for the invite you want to generate.
       </p>
-      <form className="flex flex-col justify-center items-center mt-8">
-        <div className="flex flex-col justify-center items-start w-96">
+      <form className="w-full">
+        <div className="flex flex-col justify-center items-start mt-8">
+
+      
+        <div className="flex flex-col justify-center items-start w-full">
           <label htmlFor="role">Please select the role of your guest</label>
           <select
             name="role"
@@ -140,11 +144,13 @@ const Page = () => {
             ))}
           </select>
         </div>
-        <div className="mt-4">{renderConditionalContent()}</div>
-        <span className="font0">Please ensure that the user being invited has a Google account</span>
+        <div className="my-4 w-full">{renderConditionalContent()}</div>
+        <span className="font-Poppins text-sm text-gray-500">Please ensure that the user being invited has a Google account</span>
+        </div>
+        <div className=" w-full flex flex-row justify-end items-end">
         <button
           type="button"
-          className="font-Poppins w-full px-32 py-3 bg-black text-white text-sm rounded-lg mt-12"
+          className="font-Poppins w-full px-32 py-3 bg-purple-600 hover:bg-purple-800 hover:cursor-pointer text-white text-sm rounded-lg mt-12"
           disabled={loading || !invitationTarget || !canGenerateInvitation}
           onClick={generateInvitationLink}
         >
@@ -153,9 +159,10 @@ const Page = () => {
             <span className="loader"></span>
           ) : "Generate Invitation Link"}
         </button>
+        </div>
       </form>
     </main>
   );
 };
 
-export default Page;
+export default withAuth(Invitation) ;
