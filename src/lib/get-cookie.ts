@@ -1,20 +1,28 @@
-export function getCookie(cookieName = "access_token") {
- try {
-  const cookies = document?.cookie.split("; ");
-  const foundCookie = cookies.find((row) => row.startsWith(`${cookieName}=`));
-  console.log("Cookies document log",cookies,foundCookie);
-  return foundCookie ? foundCookie.split("=")[1] : null;
+"use server";
 
- } catch (error) {
-  console.error("Error getting cookie",error);
- }
-  
+import { cookies } from "next/headers";
+
+export async function getServerSideCookie(cookieName: {
+  cookieName: string;
+}): Promise<{ cookie: string | undefined }> {
+  const cookieStore = cookies();
+  const cookie = cookieStore.get(cookieName.cookieName);
+  console.log("cookie from util", cookie);
+  return { cookie: cookie?.value };
 }
 
-export function setCookie(name: string, value: string, days: number = 7): void {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  const expiresString = `expires=${expires.toUTCString()}`;
-  document.cookie = `${name}=${value};${expiresString};path=/;secure;SameSite=Strict`;
+export async function getClientSideCookie(
+  cookieName: string
+): Promise<string | undefined> {
+  if (typeof document !== "undefined") {
+    const cookies = document.cookie.split("; ");
+    const foundCookie = cookies.find((row) => row.startsWith(`${cookieName}=`));
+    return foundCookie ? foundCookie.split("=")[1] : undefined;
+  }
+  return undefined;
 }
 
+export async function setServerSideCookie(name: string, value: string): Promise<void> {
+  const cookieStore = cookies();
+  cookieStore.set(name, value);
+}

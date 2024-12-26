@@ -1,12 +1,15 @@
 "use server";
-import { getCookie } from "@/lib/get-cookie"; // Make sure this is correctly imported from your utility file
+import { getServerSideCookie } from "@/lib/get-cookie";
 import { actionClient } from "@/lib/safe-action";
 import { CreateFellowship, FellowshipByID, UpdateFellowship } from "@/schemas/fellowship";
 import { flattenValidationErrors } from "next-safe-action";
 
-// Helper function to get authorization token from the cookie
+
+
 const getAuthHeader = () => {
-  const token = getCookie("access_token"); // Use your cookie name here, if it's different
+ 
+ const token = getServerSideCookie({ cookieName: "access_token" });
+
   if (!token) {
     throw new Error("User not authenticated");
   }

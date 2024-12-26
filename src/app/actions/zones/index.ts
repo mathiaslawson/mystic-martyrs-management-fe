@@ -1,26 +1,26 @@
 "use server";
-import { getCookie } from "@/lib/get-cookie"; // Import getCookie utility
+import { getServerSideCookie } from "@/lib/get-cookie";
 import { actionClient } from "@/lib/safe-action";
 import { CreateZone, UpdateZone, ZoneByID } from "@/schemas/zones";
 import { flattenValidationErrors } from "next-safe-action";
 
-// Helper function to get the Authorization header
+
 const getAuthHeader = () => {
-  const token = getCookie("access_token"); // Assuming 'access_token' is the cookie name
-  if (!token) {
-    throw new Error("User not authenticated");
-  }
+  
+   const token =  getServerSideCookie({ cookieName: "access_token" });
+  
+    if (!token){
+      throw new Error("User not authenticated");
+    }
+  
+  
   return `Bearer ${token}`;
 };
 
 // Get all zones
 export const getAllZones = actionClient.action(async () => {
   console.log('action triggered');
-  const token = getCookie("access_token");
-  if (!token) {
-    throw new Error("User not authenticated");
-  }
-
+ 
   const response = await fetch(
     `https://mystic-be.vercel.app/api/v1/zones`,
     {
