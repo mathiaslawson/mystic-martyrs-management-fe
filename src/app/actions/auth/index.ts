@@ -4,9 +4,9 @@ import { getCookie } from "@/lib/get-cookie";
 import { actionClient } from "@/lib/safe-action";
 
 const baseUrl = `https://mystic-be.vercel.app/`;
-
+const token = getCookie("access_token");
 export const getAccountDataAction = async () => {
-  const token = getCookie("access_token");
+  
   console.log(token);
   if (!token) {
     throw new Error("No token found. Please log in again.");
@@ -16,8 +16,7 @@ export const getAccountDataAction = async () => {
     method: "GET",
     credentials: "include",
     headers: {
-      Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNlbGFzaXNlcGVudTVAZ21haWwuY29tIiwic3ViIjoiMWNkZDg2NzktNWYxOS00ZDkyLWFkZjUtYWZkZWI0Yzg0ZDZjIiwicm9sZSI6IlpPTkVfTEVBREVSIiwiaWF0IjoxNzM1MTY1MzE4LCJleHAiOjE3MzUxNjg5MTh9.3hY90kpasGRWduchA9mPy9c1qx57UnD6toBqxdzdzPk",
-      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
     },
   });
 
@@ -28,3 +27,19 @@ export const getAccountDataAction = async () => {
   console.log(response);
   return response.json();
 };
+
+// get all members
+export const getAllMembersAction = actionClient.action(async () => {
+  const response = await fetch(
+    `https://churchbackend-management.onrender.com/api/v1/users`,
+    {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response.json();
+});

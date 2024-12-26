@@ -41,7 +41,7 @@ const Invitation = () => {
     UserRole.ADMIN,
   ];
   const canGenerateInvitation = role && roleHierarchy.indexOf(role) < roleHierarchy.indexOf(currentUserRole);
-
+setCurrentUserRole(UserRole.ADMIN)
   const generateInvitationLink = async () => {
     if (!invitationTarget || !role) return;
 
@@ -56,6 +56,7 @@ const Invitation = () => {
       toast.success("Invitation link generated and copied to clipboard!");
     } catch (err) {
       setLoading(false);
+      console.log(err);
       toast.error("Failed to copy the invitation link. Please try again.");
     }
   };

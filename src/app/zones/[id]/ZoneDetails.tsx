@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -72,11 +72,13 @@ const ZoneDetail = ({ data }: { data: ZoneData }) => {
   })
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const refreshData = async () => {
-    setIsRefreshing(true)
-    getDetails({ id: data?.zone_id })
-    setIsRefreshing(false)
-  }
+  const refreshData =useCallback(
+    async () => {
+      setIsRefreshing(true)
+      getDetails({ id: data?.zone_id })
+      setIsRefreshing(false)
+    },[]
+  ) 
 
   useEffect(() => {
     getDetails({ id: data?.zone_id })
@@ -94,7 +96,7 @@ const ZoneDetail = ({ data }: { data: ZoneData }) => {
       setIsEditOpen(false)
   
     }
-  }, [updateResult, data?.zone_id])
+  }, [updateResult, data?.zone_id,refreshData])
 
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -124,7 +126,7 @@ const ZoneDetail = ({ data }: { data: ZoneData }) => {
       toast.success('Zone Deleted Successfully')
       router.push('/zones'  )
     }
-  }, [deleteResult, data?.zone_id])
+  }, [deleteResult, data?.zone_id,router])
 
   if (isLoadingDetails) {
     return (

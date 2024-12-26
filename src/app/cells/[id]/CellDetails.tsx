@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -41,11 +41,13 @@ const CellDetail = ({ data }: { data: {cell_id: string, cell_name: string, cell_
   })
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const refreshData = async () => {
-    setIsRefreshing(true)
-    getDetails({ id: data?.cell_id })
-    setIsRefreshing(false)
-  }
+  const refreshData =useCallback(
+    async () => {
+      setIsRefreshing(true)
+      getDetails({ id: data?.cell_id })
+      setIsRefreshing(false)
+    },[]
+  ) 
 
   useEffect(() => {
     getDetails({ id: data?.cell_id })
@@ -61,7 +63,7 @@ const CellDetail = ({ data }: { data: {cell_id: string, cell_name: string, cell_
       toast.success('Cell Updated Successfully')
       setIsEditOpen(false)
     }
-  }, [updateResult, data?.cell_id])
+  }, [updateResult, data?.cell_id,refreshData])
 
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -86,7 +88,7 @@ const CellDetail = ({ data }: { data: {cell_id: string, cell_name: string, cell_
       toast.success('Cell Deleted Successfully')
       router.push('/cells')
     }
-  }, [deleteResult, data?.cell_id])
+  }, [deleteResult, data?.cell_id,router])
 
   if (isLoadingDetails) {
     return (

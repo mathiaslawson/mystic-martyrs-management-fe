@@ -8,7 +8,7 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { getAccountDataAction } from "@/app/actions/auth";
 import { useUser } from "@/app/context/UserContext";
 
-const REDIRECT_DELAY = 4000;
+// const REDIRECT_DELAY = 4000;
 
 const RedirectPage = () => {
   const router = useRouter();

@@ -3,11 +3,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   // Function to redirect to the OAuth endpoint
   const handleLogin = () => {

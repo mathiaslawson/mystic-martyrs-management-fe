@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -44,11 +44,13 @@ const ZoneDetail = ({ data }: { data: {fellowship_id: string, fellowship_name: s
   })
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const refreshData = async () => {
-    setIsRefreshing(true)
-    getDetails({ id: data?.fellowship_id })
-    setIsRefreshing(false)
-  }
+  const refreshData = useCallback(
+    async () => {
+      setIsRefreshing(true)
+      getDetails({ id: data?.fellowship_id })
+      setIsRefreshing(false)
+    },[]
+  ) 
 
   useEffect(() => {
     getDetails({ id: data?.fellowship_id })
@@ -66,7 +68,7 @@ const ZoneDetail = ({ data }: { data: {fellowship_id: string, fellowship_name: s
       setIsEditOpen(false)
   
     }
-  }, [updateResult, data?.fellowship_id])
+  }, [updateResult, data?.fellowship_id,refreshData])
 
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -92,7 +94,7 @@ const ZoneDetail = ({ data }: { data: {fellowship_id: string, fellowship_name: s
       toast.success('Fellowship Deleted Successfully')
       router.push('/fellowships'  )
     }
-  }, [deleteResult, data?.fellowship_id])
+  }, [deleteResult, data?.fellowship_id,router])
 
   if (isLoadingDetails) {
     return (
