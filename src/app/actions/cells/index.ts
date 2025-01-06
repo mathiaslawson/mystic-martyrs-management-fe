@@ -29,9 +29,8 @@ export const getAllCells = actionClient.action(async () => {
     }
   );
 
-  if (!response.ok) {
-    throw new Error("Session check failed");
-  }
+console.log(response)
+
 
   return await response.json();
 });

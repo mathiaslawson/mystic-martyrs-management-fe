@@ -1,17 +1,14 @@
-import type {Metadata} from "next";
+import type { Metadata } from "next";
 import "../globals.css";
 import LayoutContent from "../LayoutContent";
 
-export const metadata: Metadata ={
-    title: "Mystic Online",
-    description: "Built by Mystics for Mystics"
-
-}; 
+export const metadata: Metadata = {
+  title: "Mystic Online",
+  description: "Built by Mystics for Mystics",
+};
 
 export default function RootLayout({
-    children,
-}:Readonly<{children:React.ReactNode ;}>){
-    return(
-        <LayoutContent>{children}</LayoutContent>
-       )
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return <LayoutContent>{children}</LayoutContent>;
 }
