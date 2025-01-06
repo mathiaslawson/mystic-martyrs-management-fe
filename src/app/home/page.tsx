@@ -5,13 +5,17 @@ import { withAuth } from "@/components/hoc/withAuth";
 import { Button } from "@/components/ui/button";
 import { ChurchIcon, Navigation, Radar, Users } from "lucide-react";
 import Image from "next/image";
-import { useUser } from "../context/UserContext";
+import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 
 function Home() {
 
-const {user} = useUser();
+// const {user} = useUser();
 
-if(!user){
+const {me} = useAuthMemberStore()
+
+console.log(me?.data?.firstname, 'this is me')
+
+if(!me){
   return <div>Loading</div>
 }
 
@@ -28,8 +32,8 @@ if(!user){
         <div className="flex items-center space-x-4 text-purple-200">
         
           <div>
-                <h2 className="text-3xl font-bold text-white">Shalom,</h2>
-                <p className="font-light text-md mb-11">{user.email}</p>
+                <h2 className="text-3xl font-bold text-white">Shalom, {me?.data?.firstname} {me?.data.lastname}</h2>
+                <p className="font-light text-md mb-11">{me?.data?.role}</p>
          
           </div>
           

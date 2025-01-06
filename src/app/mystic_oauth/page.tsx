@@ -7,9 +7,10 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { getAccountDataAction } from "@/app/actions/auth";
 import { useUser } from "@/app/context/UserContext";
 import { useAction } from "next-safe-action/hooks";
+import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 
 
-// const REDIRECT_DELAY = 4000;
+const REDIRECT_DELAY = 4000;
 
 const RedirectPage = () => {
   const router = useRouter();
@@ -24,22 +25,26 @@ const RedirectPage = () => {
     return null;
   };
 
-  // TODO: result and status alias to handle loading and result states
-  // TODO:  const { execute: getAccountData, result: accountData, status: accountDataLoading } = useAction(getAccountDataAction)
-  const { execute: getAccountData } = useAction(getAccountDataAction)
+
+  const { execute: getAccountData, result: accountData, status: accountDataLoading } = useAction(getAccountDataAction)
+  const { setMe} = useAuthMemberStore()
 
   useEffect(() => {
     const token = getTokenFromUrl();
+
     if (token) {
       setServerSideCookie("access_token", token);
     }
-  
-      getAccountData()
-      // setTimeout(() => {
-      //   router.push("/home");
-      // }, REDIRECT_DELAY);
+
+    getAccountData()
+    setTimeout(() => {
+        if(accountDataLoading === "hasSucceeded"){
+          setMe(accountData.data)
+          router.push("/home");
+        }
+    }, REDIRECT_DELAY);
    
-  }, [setUser, router, getAccountData]);
+  }, [setUser, router, getAccountData, accountDataLoading, accountData.data, setMe]);
 
   if (isLoading) {
     return (
