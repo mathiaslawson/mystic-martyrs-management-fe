@@ -1,6 +1,5 @@
 "use server";
 
-
 import { getServerSideCookie } from "@/lib/get-cookie";
 import { actionClient } from "@/lib/safe-action";
 
@@ -37,6 +36,7 @@ export const getAccountDataAction = actionClient.action(async (): Promise<unknow
     },
   });
 
+
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData?.message || "Failed to fetch user data.");
@@ -53,22 +53,25 @@ export const getAllMembersAction = actionClient.action(async () => {
     throw new Error("No token found. Please log in again.");
   }
 
+
   const response = await fetch(
     `https://churchbackend-management.onrender.com/api/v1/users`,
     {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${document.cookie.split("=")[1]}`,
         "Content-Type": "application/json",
       },
     }
   );
 
   if (!response.ok) {
+
     const errorData = await response.json();
     throw new Error(errorData?.message || "Failed to fetch members data.");
   }
 
   return response.json();
 });
+
 
