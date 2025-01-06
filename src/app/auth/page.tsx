@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ export default function AuthPage() {
     } finally {
       setIsLoading(false);
     }
+
   };
 
   return (
@@ -35,8 +37,11 @@ export default function AuthPage() {
               {isLoading ? <span className="loader"></span> : "Log In"}
             </Button>
           </div>
+
         </div>
       </div>
     </div>
   );
+
 }
+
