@@ -7,12 +7,10 @@ export const CellByID = z.object({
 export const UpdateCell = z.object({
   cell_name: z.string(),
   id: z.string(),
-  cell_leader_id: z.string(),
 });
 
 export const CreateCell = z.object({
   cell_name: z.string(),
-  cell_leader_id: z.string(),
   fellowship_id: z.string(),
 });
 

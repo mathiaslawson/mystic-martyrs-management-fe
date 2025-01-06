@@ -9,13 +9,9 @@ import { Label } from '@/components/ui/label'
 import { Loader, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 import Select from 'react-select'
-import { addCell, getCellLeaders } from '../actions/cells'
+import { addCell } from '../actions/cells'
 import { getAllFellowships } from '../actions/fellowships'
 
-interface CellLeader {
-  value: string
-  label: string
-}
 
 interface Fellowship {
   value: string
@@ -25,33 +21,21 @@ interface Fellowship {
 export function AddCellModal({ onCellAdded }: { onCellAdded: () => void }) {
   const [isOpen, setIsOpen] = useState(false)
   const [cellName, setCellName] = useState('')
-  const [selectedLeader, setSelectedLeader] = useState<CellLeader | null>(null)
   const [selectedFellowship, setSelectedFellowship] = useState<Fellowship | null>(null)
-  const [cellLeaderOptions, setCellLeaderOptions] = useState<CellLeader[]>([])
   const [fellowshipOptions, setFellowshipOptions] = useState<Fellowship[]>([])
   const [shouldFetchData, setShouldFetchData] = useState(false)
 
   const { execute: executeAddCell, status: addCellStatus, result: addCellResult, reset: resetAddCell } = useAction(addCell)
-  const { execute: executeGetCellLeaders, status: getCellLeadersStatus, result: cellLeadersResult } = useAction(getCellLeaders)
   const { execute: executeGetFellowships, status: getFellowshipsStatus, result: fellowshipsResult } = useAction(getAllFellowships)
 
   useEffect(() => {
     if (isOpen && shouldFetchData) {
-      executeGetCellLeaders()
       executeGetFellowships()
       setShouldFetchData(false)
     }
-  }, [isOpen, shouldFetchData, executeGetCellLeaders, executeGetFellowships])
+  }, [isOpen, shouldFetchData, executeGetFellowships])
 
-  useEffect(() => {
-    if (cellLeadersResult?.data) {
-      const options = cellLeadersResult.data.map((leader: { member_id: string; firstname: string; lastname: string }) => ({
-        value: leader.member_id,
-        label: `${leader.firstname} ${leader.lastname}`
-      }))
-      setCellLeaderOptions(options)
-    }
-  }, [cellLeadersResult])
+
 
   useEffect(() => {
     if (fellowshipsResult?.data) {
@@ -66,14 +50,13 @@ export function AddCellModal({ onCellAdded }: { onCellAdded: () => void }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!cellName || !selectedLeader || !selectedFellowship) {
+    if (!cellName  || !selectedFellowship) {
       toast.error('Please fill in all fields')
       return
     }
 
     executeAddCell({
       cell_name: cellName,
-      cell_leader_id: selectedLeader.value,
       fellowship_id: selectedFellowship.value
     })
   }
@@ -83,7 +66,6 @@ export function AddCellModal({ onCellAdded }: { onCellAdded: () => void }) {
       toast.success('Cell added successfully')
       setIsOpen(false)
       setCellName('')
-      setSelectedLeader(null)
       setSelectedFellowship(null)
       onCellAdded()
       resetAddCell()  
@@ -130,7 +112,7 @@ export function AddCellModal({ onCellAdded }: { onCellAdded: () => void }) {
               placeholder="Enter cell name"
             />
           </div>
-          <div>
+          {/* <div>
             <Label htmlFor="cell_leader_id">Cell Leader</Label>
             <Select
               id="cell_leader_id"
@@ -141,7 +123,7 @@ export function AddCellModal({ onCellAdded }: { onCellAdded: () => void }) {
               isLoading={getCellLeadersStatus === 'executing'}
               isDisabled={getCellLeadersStatus === 'executing'}
             />
-          </div>
+          </div> */}
           <div>
             <Label htmlFor="fellowship_id">Fellowship</Label>
             <Select
@@ -158,7 +140,7 @@ export function AddCellModal({ onCellAdded }: { onCellAdded: () => void }) {
             <Button
               type="submit"
               className="w-1/2 bg-green-600 text-white hover:text-neutral-700"
-              disabled={addCellStatus === 'executing' || getCellLeadersStatus === 'executing' || getFellowshipsStatus === 'executing'}
+              disabled={addCellStatus === 'executing' || getFellowshipsStatus === 'executing'}
             >
               {addCellStatus === 'executing' ? (
                 <>
@@ -173,7 +155,7 @@ export function AddCellModal({ onCellAdded }: { onCellAdded: () => void }) {
               type="button"
               onClick={() => setIsOpen(false)}
               className="w-1/2 text-black bg-neutral-300 hover:text-neutral-700"
-              disabled={addCellStatus === 'executing' || getCellLeadersStatus === 'executing' || getFellowshipsStatus === 'executing'}
+              disabled={addCellStatus === 'executing' ||  getFellowshipsStatus === 'executing'}
             >
               Cancel
             </Button>

@@ -16,7 +16,7 @@ async function getZoneData(id: string) {
     zone_location: id.charAt(0).toUpperCase() + id.slice(1),
     created_at: "2024-09-02T21:37:37.988Z",
     updated_at: "2024-09-02T21:37:37.988Z",
-    zone_leader: {
+    leaders: [{
       member_id: "1c98573c-6f43-4e06-b5d0-987cddf34adc",
       user_id: "f877cf00-a52c-48c5-bd69-9ac9c22598ac",
       firstname: "John",
@@ -27,7 +27,7 @@ async function getZoneData(id: string) {
       birth_date: "1990-01-01T00:00:00.000Z",
       occupation: "Manager",
       address: `123 Main St, ${id.charAt(0).toUpperCase() + id.slice(1)}`,
-    },
+    }],
     fellowships: [
       {
         fellowship_id: "ddf8cdca-38dd-45a1-91eb-4b11d4e03c17",

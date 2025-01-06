@@ -4,15 +4,18 @@ import { actionClient } from "@/lib/safe-action";
 import { CellByID, CreateCell, UpdateCell } from "@/schemas/cells";
 import { flattenValidationErrors } from "next-safe-action";
 
-
+const getAuthHeader = async () => {
+  const token = await getServerSideCookie({ cookieName: "access_token" });
+  console.log("this is token", token.cookie);
+  if (!token) {
+    throw new Error("User not authenticated");
+  }
+  return `Bearer ${token.cookie}`;
+};
 
 // get all cells
 export const getAllCells = actionClient.action(async () => {
-  const token = await getServerSideCookie({ cookieName: "access_token" });
-
-  if (!token){
-    throw new Error("User not authenticated");
-  }
+  const authHeader = await getAuthHeader();
 
   const response = await fetch(
     `https://churchbackend-management.onrender.com/api/v1/cells`,
@@ -20,7 +23,7 @@ export const getAllCells = actionClient.action(async () => {
       method: "GET",
       credentials: "include",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: authHeader,
         "Content-Type": "application/json",
       },
     }
@@ -40,14 +43,7 @@ export const getCellsByID = actionClient
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { id } }) => {
-
-     const token = await getServerSideCookie({ cookieName: "access_token" });
-
-     if (!token) {
-       throw new Error("User not authenticated");
-     }
-
-
+    const authHeader = await getAuthHeader();
 
     const response = await fetch(
       `https://churchbackend-management.onrender.com/api/v1/cells/${id}`,
@@ -55,7 +51,7 @@ export const getCellsByID = actionClient
         method: "GET",
         credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: authHeader,
           "Content-Type": "application/json",
         },
       }
@@ -70,15 +66,8 @@ export const updateCell = actionClient
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async ({ parsedInput: { id, cell_leader_id, cell_name } }) => {
-    
-
-     const token = await getServerSideCookie({ cookieName: "access_token" });
-
-     if (!token) {
-       throw new Error("User not authenticated");
-     }
-
+  .action(async ({ parsedInput: { id, cell_name } }) => {
+    const authHeader = await getAuthHeader();
 
     const response = await fetch(
       `https://churchbackend-management.onrender.com/api/v1/cells/${id}`,
@@ -86,11 +75,10 @@ export const updateCell = actionClient
         method: "PATCH",
         credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: authHeader,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          cell_leader_id,
           cell_name,
           cell_id: id,
         }),
@@ -106,14 +94,7 @@ export const deleteCell = actionClient
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { id } }) => {
-
-
-     const token = await getServerSideCookie({ cookieName: "access_token" });
-
-     if (!token) {
-       throw new Error("User not authenticated");
-     }
-
+    const authHeader = await getAuthHeader();
 
     const response = await fetch(
       `https://churchbackend-management.onrender.com/api/v1/cells/${id}`,
@@ -121,14 +102,13 @@ export const deleteCell = actionClient
         method: "DELETE",
         credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: authHeader,
           "Content-Type": "application/json",
         },
       }
     );
     return response.json();
   });
-
 
 // create cell
 export const addCell = actionClient
@@ -137,14 +117,8 @@ export const addCell = actionClient
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(
-    async ({ parsedInput: { cell_name, fellowship_id, cell_leader_id } }) => {
-      
-       const token = await getServerSideCookie({ cookieName: "access_token" });
-
-       if (!token) {
-         throw new Error("User not authenticated");
-       }
-
+    async ({ parsedInput: { cell_name, fellowship_id } }) => {
+      const authHeader = await getAuthHeader();
 
       const response = await fetch(
         `https://churchbackend-management.onrender.com/api/v1/cells`,
@@ -152,13 +126,12 @@ export const addCell = actionClient
           method: "POST",
           credentials: "include",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: authHeader,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-              cell_leader_id, 
-              cell_name, 
-              fellowship_id
+            cell_name,
+            fellowship_id,
           }),
         }
       );
@@ -166,16 +139,9 @@ export const addCell = actionClient
     }
   );
 
-
 //   get cell leaders
 export const getCellLeaders = actionClient.action(async () => {
-  
-   const token = await getServerSideCookie({ cookieName: "access_token" });
-
-   if (!token) {
-     throw new Error("User not authenticated");
-   }
-
+  const authHeader = await getAuthHeader();
 
   const response = await fetch(
     `https://churchbackend-management.onrender.com/api/v1/users`,
@@ -183,7 +149,7 @@ export const getCellLeaders = actionClient.action(async () => {
       method: "GET",
       credentials: "include",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: authHeader,
         "Content-Type": "application/json",
       },
     }

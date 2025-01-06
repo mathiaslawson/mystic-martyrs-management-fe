@@ -8,7 +8,6 @@ export const UpdateZone = z.object({
   zone_name: z.string(),
   id: z.string(), 
   zone_location: z.string(),
-  zone_leader_id: z.string(),
 });
 
 export const CreateZone = z.object({
