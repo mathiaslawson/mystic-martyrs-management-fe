@@ -6,14 +6,34 @@ import { actionClient } from "@/lib/safe-action";
 
 const baseUrl = `https://mystic-be.vercel.app/`;
 
-export const getAccountDataAction = actionClient.action(async () => {
-  console.log('init get account action')
-  const token = await getServerSideCookie({cookieName: "access_token"});
+// export const getAccountDataAction = actionClient.action(async () => {
+//   console.log('init get account action')
+//   const token = await getServerSideCookie({cookieName: "access_token"});
+
+//   const response = await fetch(`${baseUrl}api/v1/auth/me`, {
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token.cookie}`
+//     },
+//   });
+
+//   if (!response.ok) {
+//     const errorData = await response.json();
+//     throw new Error(errorData?.message || "Failed to fetch user data.");
+//   }
+
+//   return response.json();
+// });
+
+
+export const getAccountDataAction = actionClient.action(async (): Promise<unknown> => {
+  console.log("init get account action");
+  const token = await getServerSideCookie({ cookieName: "access_token" });
 
   const response = await fetch(`${baseUrl}api/v1/auth/me`, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${token.cookie}`
+      Authorization: `Bearer ${token.cookie}`,
     },
   });
 
@@ -22,8 +42,9 @@ export const getAccountDataAction = actionClient.action(async () => {
     throw new Error(errorData?.message || "Failed to fetch user data.");
   }
 
-  return response.json();
+  return response.json(); // Response typed as `unknown`
 });
+
 
 export const getAllMembersAction = actionClient.action(async () => {
  const token = getServerSideCookie({ cookieName: "access_token" });

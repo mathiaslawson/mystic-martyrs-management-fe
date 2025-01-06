@@ -1,19 +1,15 @@
 
+
 'use client'
 
 import { withAuth } from "@/components/hoc/withAuth";
-import { Button } from "@/components/ui/button";
 import { ChurchIcon, Navigation, Radar, Users } from "lucide-react";
 import Image from "next/image";
 import { useUser } from "../context/UserContext";
-
 function Home() {
 
-const {user} = useUser();
-
-if(!user){
-  return <div>Loading</div>
-}
+  const { user } = useUser();
+  console.log(user);
 
   return (
     <div className="xl:mt-[-1.6rem] mt-10">
@@ -29,7 +25,7 @@ if(!user){
         
           <div>
                 <h2 className="text-3xl font-bold text-white">Shalom,</h2>
-                <p className="font-light text-md mb-11">{user.email}</p>
+                <p className="font-light text-md mb-11">Mathias Prince Lawson</p>
          
           </div>
           
@@ -52,13 +48,13 @@ if(!user){
         {/* Data */}
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
           
-  <div className="p-4 mt-10 rounded-md bg-neutral-100 shadow-lg  border border-l border-gradient-to-r from-yellow-500 to-yellow-700">
+  <div className="p-4 mt-10 rounded-md bg-gradient-to-r from-neutral-200 to-neutral-100 shadow-lg">
       <div className="flex items-center justify-between h-[20svh]">
         <div className="flex items-center space-x-4 text-black">
-                    <Navigation className="h-6 w-6" />
+          <Navigation className="h-6 w-6" />
           <div>
             <h2 className="xl:text-3xl text-2xl font-bold">Zones</h2>
-            <Button className="bg-purple-600 text-white text-sm font-Poppins py-2 px-6">See All</Button>
+            <p className="text-purple-900">(See all)</p>
           </div>
       </div>           
         <p className="text-purple-900 font-extrabold text-6xl mx-10">
@@ -66,7 +62,7 @@ if(!user){
         </p>
       </div>
        
-     
+      <div className="border-yellow-600 mt-10 bg-gradient-to-r from-yellow-500 to-yellow-700 shadow-lg w-full h-2 rounded-full"></div>
   </div>
   
   <div className="p-4 mt-10 rounded-md bg-gradient-to-r from-neutral-200 to-neutral-100 shadow-lg">

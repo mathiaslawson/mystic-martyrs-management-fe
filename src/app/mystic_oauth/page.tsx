@@ -1,4 +1,5 @@
-'use client';
+// components/RedirectPage.tsx
+"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,8 +9,7 @@ import { getAccountDataAction } from "@/app/actions/auth";
 import { useUser } from "@/app/context/UserContext";
 import { useAction } from "next-safe-action/hooks";
 
-
-// const REDIRECT_DELAY = 4000;
+const REDIRECT_DELAY = 4000;
 
 const RedirectPage = () => {
   const router = useRouter();
@@ -24,21 +24,34 @@ const RedirectPage = () => {
     return null;
   };
 
-  // TODO: result and status alias to handle loading and result states
-  // TODO:  const { execute: getAccountData, result: accountData, status: accountDataLoading } = useAction(getAccountDataAction)
-  const { execute: getAccountData } = useAction(getAccountDataAction)
+  const { execute: getAccountData } = useAction(getAccountDataAction);
 
   useEffect(() => {
     const token = getTokenFromUrl();
     if (token) {
       setServerSideCookie("access_token", token);
     }
+
+    const fetchUserData = async () => {
+      try {
+        const result = await getAccountData();
+        
+        if ('data' in result) {  // Type guard to check if 'data' exists
+          console.log("User data:", result.data);
+          setUser(result.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    };
   
-      getAccountData()
-      // setTimeout(() => {
-      //   router.push("/home");
-      // }, REDIRECT_DELAY);
-   
+    fetchUserData();
+
+    const timeout = setTimeout(() => {
+      router.push("/home");
+    }, REDIRECT_DELAY);
+
+    return () => clearTimeout(timeout);
   }, [setUser, router, getAccountData]);
 
   if (isLoading) {
