@@ -14,7 +14,7 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
   return (
     <div className="flex">
       <Sidebar />
-      <main className="flex-1 p-8 lg:ml-[240px]">{children}</main>
+      <main className="flex-1 p-8 lg:ml-[240px] bg-neutral-100 h-screen">{children}</main>
     </div>
   );
 }
