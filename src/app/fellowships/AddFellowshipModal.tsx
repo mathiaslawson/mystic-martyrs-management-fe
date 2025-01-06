@@ -10,12 +10,8 @@ import { Loader, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 import Select from 'react-select'
 import { getAllZones } from '@/app/actions/zones'
-import { addFellowship, getFellowshipLeaders } from '../actions/fellowships'
+import { addFellowship } from '../actions/fellowships'
 
-interface FellowshipLeader {
-  value: string
-  label: string
-}
 
 interface Zone {
   value: string
@@ -25,33 +21,24 @@ interface Zone {
 export function AddFellowshipModal({ onFellowshipAdded }: { onFellowshipAdded: () => void }) {
   const [isOpen, setIsOpen] = useState(false)
   const [fellowshipName, setFellowshipName] = useState('')
-  const [selectedLeader, setSelectedLeader] = useState<FellowshipLeader | null>(null)
+
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null)
-  const [fellowshipLeaderOptions, setFellowshipLeaderOptions] = useState<FellowshipLeader[]>([])
+  // const [fellowshipLeaderOptions, setFellowshipLeaderOptions] = useState<FellowshipLeader[]>([])
   const [zoneOptions, setZoneOptions] = useState<Zone[]>([])
   const [shouldFetchData, setShouldFetchData] = useState(false)
 
   const { execute: executeAddFellowship, status: addFellowshipStatus, result: addFellowshipResult, reset: resetAddFellowship } = useAction(addFellowship)
-  const { execute: executeGetFellowshipLeaders, status: getFellowshipLeadersStatus, result: fellowshipLeadersResult } = useAction(getFellowshipLeaders)
+  // const { execute: executeGetFellowshipLeaders, status: getFellowshipLeadersStatus, result: fellowshipLeadersResult } = useAction(getFellowshipLeaders)
   const { execute: executeGetZones, status: getZonesStatus, result: zonesResult } = useAction(getAllZones)
 
   useEffect(() => {
     if (isOpen && shouldFetchData) {
-      executeGetFellowshipLeaders()
+      // executeGetFellowshipLeaders()
       executeGetZones()
       setShouldFetchData(false)
     }
-  }, [isOpen, shouldFetchData, executeGetFellowshipLeaders, executeGetZones])
+  }, [isOpen, shouldFetchData, executeGetZones])
 
-  useEffect(() => {
-    if (fellowshipLeadersResult?.data) {
-      const options = fellowshipLeadersResult.data.map((leader: { member_id: string; firstname: string; lastname: string }) => ({
-        value: leader.member_id,
-        label: `${leader.firstname} ${leader.lastname}`
-      }))
-      setFellowshipLeaderOptions(options)
-    }
-  }, [fellowshipLeadersResult])
 
   useEffect(() => {
     if (zonesResult?.data) {
@@ -66,14 +53,14 @@ export function AddFellowshipModal({ onFellowshipAdded }: { onFellowshipAdded: (
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!fellowshipName || !selectedLeader || !selectedZone) {
+    if (!fellowshipName  || !selectedZone) {
       toast.error('Please fill in all fields')
       return
     }
 
     executeAddFellowship({
       fellowship_name: fellowshipName,
-      fellowship_leader_id: selectedLeader.value,
+
       zone_id: selectedZone.value
     })
   }
@@ -83,7 +70,7 @@ export function AddFellowshipModal({ onFellowshipAdded }: { onFellowshipAdded: (
       toast.success('Fellowship added successfully')
       setIsOpen(false)
       setFellowshipName('')
-      setSelectedLeader(null)
+     
       setSelectedZone(null)
       onFellowshipAdded()
       resetAddFellowship()  
@@ -130,7 +117,7 @@ export function AddFellowshipModal({ onFellowshipAdded }: { onFellowshipAdded: (
               placeholder="Enter fellowship name"
             />
           </div>
-          <div>
+          {/* <div>
             <Label htmlFor="fellowship_leader_id">Fellowship Leader</Label>
             <Select
               id="fellowship_leader_id"
@@ -141,7 +128,7 @@ export function AddFellowshipModal({ onFellowshipAdded }: { onFellowshipAdded: (
               isLoading={getFellowshipLeadersStatus === 'executing'}
               isDisabled={getFellowshipLeadersStatus === 'executing'}
             />
-          </div>
+          </div> */}
           <div>
             <Label htmlFor="zone_id">Fellowship Zone</Label>
             <Select
@@ -158,7 +145,7 @@ export function AddFellowshipModal({ onFellowshipAdded }: { onFellowshipAdded: (
             <Button
               type="submit"
               className="w-1/2 bg-red-600 text-white hover:text-neutral-700"
-              disabled={addFellowshipStatus === 'executing' || getFellowshipLeadersStatus === 'executing' || getZonesStatus === 'executing'}
+              disabled={addFellowshipStatus === 'executing' || getZonesStatus === 'executing'}
             >
               {addFellowshipStatus === 'executing' ? (
                 <>
@@ -173,7 +160,7 @@ export function AddFellowshipModal({ onFellowshipAdded }: { onFellowshipAdded: (
               type="button"
               onClick={() => setIsOpen(false)}
               className="w-1/2 text-black bg-neutral-300 hover:text-neutral-700"
-              disabled={addFellowshipStatus === 'executing' || getFellowshipLeadersStatus === 'executing' || getZonesStatus === 'executing'}
+              disabled={addFellowshipStatus === 'executing' || getZonesStatus === 'executing'}
             >
               Cancel
             </Button>

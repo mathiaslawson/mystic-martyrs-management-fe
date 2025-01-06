@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -72,11 +72,13 @@ const ZoneDetail = ({ data }: { data: ZoneData }) => {
   })
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const refreshData = async () => {
-    setIsRefreshing(true)
-    getDetails({ id: data?.zone_id })
-    setIsRefreshing(false)
-  }
+  const refreshData =useCallback(
+    async () => {
+      setIsRefreshing(true)
+      getDetails({ id: data?.zone_id })
+      setIsRefreshing(false)
+    },[]
+  ) 
 
   useEffect(() => {
     getDetails({ id: data?.zone_id })
@@ -94,7 +96,7 @@ const ZoneDetail = ({ data }: { data: ZoneData }) => {
       setIsEditOpen(false)
   
     }
-  }, [updateResult, data?.zone_id])
+  }, [updateResult, data?.zone_id,refreshData])
 
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -124,7 +126,7 @@ const ZoneDetail = ({ data }: { data: ZoneData }) => {
       toast.success('Zone Deleted Successfully')
       router.push('/zones'  )
     }
-  }, [deleteResult, data?.zone_id])
+  }, [deleteResult, data?.zone_id,router])
 
   if (isLoadingDetails) {
     return (
@@ -235,8 +237,8 @@ const ZoneDetail = ({ data }: { data: ZoneData }) => {
         
         <h1 className="text-2xl font-bold mb-8 text-neutral-900">{zoneData.zone_name}</h1>
         
-        <div className="grid gap-8 md:grid-cols-3 lg:grid-cols-3 mb-8">
-          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 lg:col-span-2">
+        <div className="grid gap-8 lg:grid-cols-3 mb-8">
+          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 lg:col-span-3">
             <CardHeader className="text-black rounded-t-lg bg-yellow-100">
               <CardTitle>Zone Information</CardTitle>
               <CardDescription className="text-yellow-900">Details about the zone</CardDescription>
@@ -262,7 +264,7 @@ const ZoneDetail = ({ data }: { data: ZoneData }) => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
+          {/* <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader className="bg-yellow-100 text-black rounded-t-lg">
               <CardTitle>Zone Leader</CardTitle>
               <CardDescription className="text-yellow-900">Information about the zone leader</CardDescription>
@@ -294,6 +296,35 @@ const ZoneDetail = ({ data }: { data: ZoneData }) => {
                   <p className="text-sm text-gray-600">Address: {zoneData.zone_leader.address}</p>
                 )}
               </div>
+            </CardContent>
+          </Card> */}
+
+{/* leaders */}
+           <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 lg:col-span-3">
+            <CardHeader className="bg-yellow-100 text-black rounded-t-lg">
+              <CardTitle>Fellowships</CardTitle>
+              <CardDescription className="text-yellow-900">Fellowships in this zone</CardDescription>
+              <div className="border-yellow-600 mt-3 bg-gradient-to-r from-yellow-500 to-yellow-700 shadow-lg w-full h-2 rounded-full"></div>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Fellowship Name</TableHead>
+                    <TableHead>Created At</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {zoneData.fellowships.map((leaders : {fellowship_id: string, zone_id: string, fellowship_name: string, fellowship_leader_id: string, created_at: string, updated_at: string}) => (
+                    <TableRow key={leaders.fellowship_id}>
+                      <TableCell className="font-medium">
+                        Leader
+                      </TableCell>
+                      <TableCell>{formatDate(leaders.created_at)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
 

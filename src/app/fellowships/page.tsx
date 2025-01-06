@@ -17,6 +17,8 @@ function Home() {
     getFellowships()
   }, [getFellowships])
 
+  console.log(fellowships, 'this is the ')
+
   const handleFellowshipAdd = () => {
     getFellowships()
   }
