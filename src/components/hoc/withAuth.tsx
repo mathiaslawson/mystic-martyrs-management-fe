@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
 import { getAccountDataAction } from '@/app/actions/auth';
@@ -19,7 +19,7 @@ export function withAuth<T extends object>(WrappedComponent: React.ComponentType
       };
       
       checkAuth();
-    }, []);
+    }, [getAccountData]);
 
     useEffect(() => {
    
@@ -40,6 +40,6 @@ export function withAuth<T extends object>(WrappedComponent: React.ComponentType
       );
     }
 
-    return accountData ? <WrappedComponent {...props} /> : null;
+    return accountData && <WrappedComponent {...props} /> ;
   };
 }

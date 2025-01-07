@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Home, Settings, Users, HelpCircle, Menu, ArrowLeftIcon, Church, Radar, Navigation, UserRoundPlus } from "lucide-react"
+import { Home, Users, Menu, ArrowLeftIcon, Church, Radar, Navigation, UserRoundPlus } from "lucide-react"
 
 const sidebarItems = [
   { name: "Home", href: "/home", icon: Home },
@@ -14,15 +14,21 @@ const sidebarItems = [
   { name: "Fellowhips", href: "/fellowships", icon: Church },
   { name: "Zones", href: "/zones", icon: Navigation },
   { name: "Cells", href: "/cells", icon: Radar },
+  { name: "Attendance Records", href: "/attendance/attendance-records", icon: Radar },
+  // { name: "Cell Summary", href: "/attendance/cell-summary", icon: Radar },
+  { name: "Cell Member Statistics", href: "/attendance/cell-member-stats", icon: Radar },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
-  { name: "Settings", href: "/settings", icon: Settings },
-  { name: "Help", href: "/help", icon: HelpCircle },
+  // { name: "Settings", href: "/settings", icon: Settings },
+  // { name: "Help", href: "/help", icon: HelpCircle },
   { name: "Logout", href: "/help", icon: ArrowLeftIcon }
 ]
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+
+  console.log(pathname, 'his is the path name')
+
 
   return (
     <>
@@ -59,8 +65,8 @@ function SidebarContent({ pathname }: { pathname: string }) {
             <Button
               key={item.name}
               asChild
-              variant={pathname === item.href ? "secondary" : "ghost"}
-              className="justify-start"
+              variant={pathname === item.href ? "destructive" : "ghost"}
+              className={`justify-start ${pathname === item.href ? "text-purple-700" : "text-neutral-800"}`}
             >
               <Link href={item.href}>
                 <item.icon className="mr-2 h-4 w-4" />
