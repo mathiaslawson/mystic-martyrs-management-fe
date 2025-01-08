@@ -18,6 +18,7 @@ const getAuthHeader = async () => {
 
 // Get all zones
 export const getAllZones = actionClient.action(async () => {
+  const token = await getServerSideCookie({ cookieName: "access_token" });
   console.log('action triggered');
   const authHeader = await getAuthHeader();;
   const response = await fetch(
@@ -26,7 +27,7 @@ export const getAllZones = actionClient.action(async () => {
       method: "GET",
       credentials: "include",
       headers: {
-        Authorization: authHeader, 
+        Authorization: `Bearer ${token.cookie}`, 
         "Content-Type": "application/json",
       },
     }
@@ -115,14 +116,17 @@ export const addZone = actionClient
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { zone_leader_id, zone_location, zone_name } }) => {
+    
      const authHeader = await getAuthHeader();
+     const token = await getServerSideCookie({ cookieName: "access_token" });
+
     const response = await fetch(
       `https://mystic-be.vercel.app/api/v1/zones`,
       {
         method: "POST",
         credentials: "include",
         headers: {
-          Authorization: authHeader,
+          Authorization: `Bearer ${token.cookie}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
