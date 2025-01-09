@@ -27,8 +27,8 @@ export const useAuthMemberStore = create<AuthMemberActionsStore>()(
         },
       }),
       {
-        name: "AuthMemberStore", // Key for the storage
-        storage: localStorageWrapper, // Use custom storage wrapper
+        name: "AuthMemberStore",
+        storage: localStorageWrapper,
       }
     ),
     { name: "AuthMemberStore", enabled: true }

@@ -11,6 +11,8 @@ function Home() {
 
   console.log(me?.data?.firstname, "this is me");
 
+
+
   return (
     <>
       {me && (

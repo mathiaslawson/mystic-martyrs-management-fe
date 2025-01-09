@@ -1,48 +1,122 @@
-"use client"
+"use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { AttendanceStats } from "./abscence-stats"
-import { AbsenceList } from "./abscence-list"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import {
+  memberAbscenceStat,
+  singleMemberStats,
+} from "@/app/actions/attendance";
+import { useAction } from "next-safe-action/hooks";
+import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { AttendanceStats } from "./abscence-stats";
+import { AbsenceList } from "./abscence-list";
 
 interface MemberStatsDialogProps {
-  memberId: number | null
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  memberId: string | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export function MemberStatsDialog({ memberId, open, onOpenChange }: MemberStatsDialogProps) {
-  // Mock data - in a real application, you'd fetch this based on the memberId
-  const memberStats = {
-    totalDays: 30,
-    presentDays: 28,
-    attendancePercentage: 93.33
-  }
+interface AttendanceStatsData {
+  totalDays: number;
+  presentDays: number;
+  attendancePercentage: number;
+}
 
-  const absences = [
-    {
-      date: "2024-11-23T15:30:00.000Z",
-      remarks: "Recorded"
-    },
-    {
-      date: "2024-11-10T15:30:00.000Z",
-      remarks: "Recorded"
+interface Absence {
+  date: string;
+  remarks: string;
+}
+
+export function MemberStatsDialog({
+  memberId,
+  open,
+  onOpenChange,
+}: MemberStatsDialogProps) {
+  const [attendanceStats, setAttendanceStats] =
+    useState<AttendanceStatsData | null>(null);
+  const [absences, setAbsences] = useState<Absence[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const {
+    execute: getAbscent,
+    status: abscentLoading,
+    result: abscentResult,
+  } = useAction(memberAbscenceStat);
+
+  const {
+    execute: getSingleStat,
+    status: singleStatLoading,
+    result: singleStatResult,
+  } = useAction(singleMemberStats);
+
+  useEffect(() => {
+    if (memberId) {
+      setIsLoading(true);
+      setError(null);
+      getSingleStat({ member_id: memberId });
+      getAbscent({ member_id: memberId });
     }
-  ]
+  }, [getSingleStat, memberId, getAbscent]);
 
-  console.log(memberId)
+  useEffect(() => {
+    if (singleStatLoading === "hasSucceeded" && singleStatResult?.data?.data) {
+      setAttendanceStats(singleStatResult?.data?.data);
+    } else if (singleStatLoading === "hasErrored") {
+      setError("Failed to load attendance stats");
+    }
+  }, [singleStatLoading, singleStatResult]);
+
+  useEffect(() => {
+    if (abscentLoading === "hasSucceeded" && abscentResult?.data?.data) {
+      setAbsences(abscentResult?.data?.data);
+    } else if (abscentLoading === "hasErrored") {
+      setError((prevError) =>
+        prevError
+          ? `${prevError}, Failed to load absences`
+          : "Failed to load absences"
+      );
+    }
+  }, [abscentLoading, abscentResult]);
+
+  useEffect(() => {
+    if (singleStatLoading !== "executing" && abscentLoading !== "executing") {
+      setIsLoading(false);
+    }
+  }, [singleStatLoading, abscentLoading]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Member Statistics</DialogTitle>
+          <DialogTitle>Cell Member Attendace Statistics</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-6">
-          <AttendanceStats stats={memberStats} />
-          <AbsenceList absences={absences} />
-        </div>
+        {isLoading ? (
+          <Card>
+            <CardContent className="flex items-center justify-center h-40">
+              <p>Loading...</p>
+            </CardContent>
+          </Card>
+        ) : error ? (
+          <Card>
+            <CardContent className="flex items-center justify-center h-40">
+              <p className="text-red-500">{error}</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-6">
+            <AttendanceStats stats={attendanceStats} />
+            <AbsenceList absences={absences} />
+          </div>
+        )}
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-

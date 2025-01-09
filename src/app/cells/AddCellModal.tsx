@@ -22,7 +22,6 @@ export function AddCellModal({ onCellAdded }: { onCellAdded: () => void }) {
   const [isOpen, setIsOpen] = useState(false)
   const [cellName, setCellName] = useState('')
   const [selectedFellowship, setSelectedFellowship] = useState<Fellowship | null>(null)
-  const [selectedCell, setSelectedCell] = useState<Fellowship | null>(null)
   const [fellowshipOptions, setFellowshipOptions] = useState<Fellowship[]>([])
   const [shouldFetchData, setShouldFetchData] = useState(false)
 

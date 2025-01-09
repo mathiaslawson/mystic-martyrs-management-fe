@@ -5,13 +5,15 @@ interface AttendanceStatsProps {
     totalDays: number
     presentDays: number
     attendancePercentage: number
-  }
+  } | null
 }
 
 export function AttendanceStats({ stats }: AttendanceStatsProps) {
+  if (!stats) return null
+
   return (
-    <div className="grid gap-4 md:grid-cols-3">
-      <Card>
+    <div className="grid gap-4 md:grid-cols-4">
+      <Card className="bg-neutral-100 shadow-lg  border border-l">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Total Days</CardTitle>
         </CardHeader>
@@ -19,7 +21,7 @@ export function AttendanceStats({ stats }: AttendanceStatsProps) {
           <div className="text-2xl font-bold">{stats.totalDays}</div>
         </CardContent>
       </Card>
-      <Card>
+      <Card className="bg-neutral-100 shadow-lg  border border-l">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Present Days</CardTitle>
         </CardHeader>
@@ -27,7 +29,15 @@ export function AttendanceStats({ stats }: AttendanceStatsProps) {
           <div className="text-2xl font-bold">{stats.presentDays}</div>
         </CardContent>
       </Card>
-      <Card>
+      <Card className="bg-neutral-100 shadow-lg  border border-l">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Abscent Days</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats.totalDays - stats.presentDays}</div>
+        </CardContent>
+      </Card>
+      <Card className="bg-neutral-100 shadow-lg  border border-l">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Attendance Percentage</CardTitle>
         </CardHeader>
