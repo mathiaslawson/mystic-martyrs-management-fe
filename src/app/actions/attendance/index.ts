@@ -29,20 +29,23 @@ export const recordAttendance = actionClient
   .action(async ({ parsedInput: { cell_id, member_id, date, is_present } }) => {
     const authHeader = await getAuthHeader();
 
-    const response = await fetch(`https://mystic-be.vercel.app/api/v1/cells`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Authorization: authHeader,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        cell_id,
-        member_id,
-        date,
-        is_present,
-      }),
-    });
+    const response = await fetch(
+      `https://mystic-be.vercel.app/api/v1/cells/record-attendance`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Authorization: authHeader,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cell_id,
+          member_id,
+          date,
+          is_present,
+        }),
+      }
+    );
     return response.json();
   });
 
@@ -55,17 +58,20 @@ export const attendanceRecords = actionClient
   .action(async ({ parsedInput: { cell_id } }) => {
     const authHeader = await getAuthHeader();
 
-    const response = await fetch(`https://mystic-be.vercel.app/api/v1/cells`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Authorization: authHeader,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        cell_id,
-      }),
-    });
+    const response = await fetch(
+      `https://mystic-be.vercel.app/api/v1/cells/get-attendance-stats`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Authorization: authHeader,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cell_id,
+        }),
+      }
+    );
     return response.json();
   });
 

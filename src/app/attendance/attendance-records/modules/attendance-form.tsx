@@ -1,62 +1,129 @@
-"use client"
+"use client";
 
-import { useState } from 'react'
-import AsyncSelect from 'react-select/async'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { DatePicker } from "@/components/ui/date-picker"
+import { useState, useEffect } from "react";
+import Select from "react-select";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { DatePicker } from "@/components/ui/date-picker";
+import { useAction } from "next-safe-action/hooks";
+import { getCellMembers, recordAttendance } from "@/app/actions/attendance";
+import { toast } from "sonner";
+import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 
-// Mock API call
-const fetchMembers = async (inputValue: string) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  const members = [
-    { value: "d4e1b7bf-7f37-4996-9de7-660f6f540ab9", label: "Mathias Lawson" },
-    { value: "2", label: "Jane Doe" },
-    { value: "3", label: "John Smith" },
-    { value: "4", label: "Alice Johnson" },
-    { value: "5", label: "Bob Williams" },
-    { value: "6", label: "Carol Brown" },
-    { value: "7", label: "David Lee" },
-    { value: "8", label: "Eva Garcia" },
-    { value: "9", label: "Frank Wilson" },
-    { value: "10", label: "Grace Taylor" },
-  ]
-  return members.filter(member => 
-    member.label.toLowerCase().includes(inputValue.toLowerCase())
-  )
+interface Member {
+  member_id: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  role: string;
+}
+
+interface CellData {
+  data: {
+    success: boolean;
+    message: string;
+    data: {
+      cell_id: string;
+      members: Member[];
+    };
+  };
+}
+
+interface SelectOption {
+  value: string;
+  label: string;
 }
 
 export function AttendanceForm() {
-  const [date, setDate] = useState<Date | undefined>(new Date())
-  const [isPresent, setIsPresent] = useState(false)
-  const [selectedMember, setSelectedMember] = useState<{ value: string; label: string } | null>(null)
+  const [date, setDate] = useState< undefined | Date>(new Date());
+  const [isPresent, setIsPresent] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<SelectOption | null>(null);
+  const [members, setMembers] = useState<SelectOption[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [filteredMembers, setFilteredMembers] = useState<SelectOption[]>([]);
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault()
-    const attendanceData = {
-      cell_id: "00e23fa1-12c8-439d-a2e4-f5b1300f4b64",
-      member_id: selectedMember?.value,
-      date: date?.toISOString(),
-      is_present: isPresent
+  const { me } = useAuthMemberStore();
+  const cell_id = me?.data.role === "CELL_LEADER" ? me?.data.member?.cell_id : "";
+
+  // Fetch members when component mounts
+  useEffect(() => {
+    const fetchMembers = async () => {
+      if (!cell_id) return;
+      
+      setIsLoading(true);
+      try {
+        const response = await getCellMembers({ cell_id });
+        
+        if (response?.data?.success && response.data.data.members) {
+          const memberOptions = response.data.data.members
+            // .filter(member => member.role !== "CELL_LEADER") 
+            .map((member: Member) => ({
+              value: member.member_id,
+              label: `${member.firstname} ${member.lastname}`,
+            }));
+          setMembers(memberOptions);
+          setFilteredMembers(memberOptions);
+        }
+      } catch (error) {
+        console.error("Error fetching members:", error);
+        toast.error("Failed to load members");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMembers();
+  }, [cell_id]);
+
+  const { execute: recordAttend, status: recordStatus } = useAction(
+    recordAttendance,
+    {
+      onSuccess: () => {
+        toast.success("Attendance recorded successfully");
+        setDate(new Date());
+        setIsPresent(false);
+        setSelectedMember(null);
+      },
+      onError: (error) => {
+        toast.error(`Error recording attendance: ${error.error}`);
+      },
     }
-    console.log('Submitting attendance:', attendanceData)
-    setDate(new Date())
-    setIsPresent(false)
-    setSelectedMember(null)
-  }
+  );
 
-  const loadOptions = (inputValue: string) =>
-    new Promise<{ value: string; label: string }[]>(resolve => {
-      fetchMembers(inputValue).then(options => {
-        resolve(options)
-      })
-    })
+  // Handle search input
+  const handleSearchInput = (inputValue: string) => {
+    const filtered = members.filter(member =>
+      member.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
+    setFilteredMembers(filtered);
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    
+    if (!selectedMember || !date || !cell_id) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    const attendanceData = {
+      cell_id,
+      member_id: selectedMember.value,
+      date: date.toISOString(),
+      is_present: isPresent,
+    };
+
+    try {
+       recordAttend(attendanceData);
+    } catch (error) {
+      console.error("Error submitting attendance:");
+    }
+  };
 
   return (
-    <Card>
+    <Card className="w-full max-w-full mx-auto">
       <CardHeader>
         <CardTitle>Record Attendance</CardTitle>
       </CardHeader>
@@ -64,29 +131,33 @@ export function AttendanceForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="member">Select Member</Label>
-            <AsyncSelect
-              cacheOptions
-              loadOptions={loadOptions}
-              defaultOptions
-              onChange={setSelectedMember}
+            <Select
+              id="member"
+              isLoading={isLoading}
+              options={filteredMembers}
               value={selectedMember}
+              onChange={setSelectedMember}
+              onInputChange={handleSearchInput}
+              isDisabled={!cell_id || isLoading}
               placeholder="Search for a member..."
-              styles={{
-                control: (baseStyles, state) => ({
-                  ...baseStyles,
-                  borderColor: state.isFocused ? 'black' : 'hsl(0, 0%, 80%)',
-                  boxShadow: state.isFocused ? '0 0 0 1px black' : 'none',
-                  '&:hover': {
-                    borderColor: 'black',
-                  },
-                }),
-                option: (baseStyles, state) => ({
-                  ...baseStyles,
-                  backgroundColor: state.isFocused ? 'hsl(0, 0%, 90%)' : 'white',
-                  color: 'black',
-                }),
-              }}
+              className="text-sm"
+              classNamePrefix="select"
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary: 'black',
+                  primary25: '#f3f4f6',
+                  primary50: '#e5e7eb',
+                },
+              })}
+              noOptionsMessage={() => "No members found"}
             />
+            {!cell_id && (
+              <p className="text-sm text-red-500">
+                You must be a cell leader to record attendance
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="date">Date</Label>
@@ -100,10 +171,15 @@ export function AttendanceForm() {
             />
             <Label htmlFor="is-present">Present</Label>
           </div>
-          <Button type="submit" disabled={!selectedMember}>Submit Attendance</Button>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={!selectedMember || !date || !cell_id || recordStatus === "executing"}
+          >
+            {recordStatus === "executing" ? "Recording..." : "Submit Attendance"}
+          </Button>
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
-

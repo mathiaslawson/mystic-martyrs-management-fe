@@ -4,7 +4,7 @@ export const RecordAttendance = z.object({
   cell_id: z.string(),
   member_id: z.string(),
   date: z.string(),
-  is_present: z.string(),
+  is_present: z.boolean(),
 });
 
 export const AttendanceRecords = z.object({
