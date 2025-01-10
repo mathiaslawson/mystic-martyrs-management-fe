@@ -1,14 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useAction } from "next-safe-action/hooks";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Loader, Loader2, Plus } from "lucide-react";
-import { toast } from "sonner";
+import { Loader } from "lucide-react";
 import Select from "react-select";
-import { addCell, getAllCells } from "../actions/cells";
+import { getAllCells } from "../actions/cells";
 import { getAllFellowships } from "../actions/fellowships";
 import { withAuth } from "@/components/hoc/withAuth";
 import { Options } from "./types";
@@ -16,10 +13,10 @@ import { getAllZones } from "../actions/zones";
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 import { generateInviteCode } from "../actions/auth";
 import InviteCodeDialog from "./inviteCodeDialogue";
+import { Label } from "@/components/ui/label";
 
 function AddCellModal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [cellName, setCellName] = useState("");
+  const [isOpen] = useState(false);
 
   const [selectedFellowship, setSelectedFellowship] = useState<Options | null>(
     null
@@ -28,7 +25,6 @@ function AddCellModal() {
   const [selectedRole, setSelectedRole] = useState<Options | null>(null);
 
   const [fellowshipOptions, setFellowshipOptions] = useState<Options[]>([]);
-  const [shouldFetchData, setShouldFetchData] = useState(false);
 
   // cells
   const [cellOptions, setCellOptions] = useState<Options[]>([]);

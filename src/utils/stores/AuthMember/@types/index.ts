@@ -1,4 +1,4 @@
-export  interface AuthMemebr {
+export  interface AuthMember {
   data: {
     user_id: string;
     email: string;
@@ -44,6 +44,6 @@ export  interface AuthMemebr {
 
 
 export interface AuthMemberActionsStore {
-    me: AuthMemebr | null
-    setMe: (me: AuthMemebr | null) => void
+    me: AuthMember | null
+    setMe: (me: AuthMember | null) => void
 }

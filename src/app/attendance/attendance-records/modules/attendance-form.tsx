@@ -20,16 +20,16 @@ interface Member {
   role: string;
 }
 
-interface CellData {
-  data: {
-    success: boolean;
-    message: string;
-    data: {
-      cell_id: string;
-      members: Member[];
-    };
-  };
-}
+// interface CellData {
+//   data: {
+//     success: boolean;
+//     message: string;
+//     data: {
+//       cell_id: string;
+//       members: Member[];
+//     };
+//   };
+// }
 
 interface SelectOption {
   value: string;
@@ -118,7 +118,7 @@ export function AttendanceForm() {
     try {
        recordAttend(attendanceData);
     } catch (error) {
-      console.error("Error submitting attendance:");
+      console.error("Error submitting attendance:", error);
     }
   };
 

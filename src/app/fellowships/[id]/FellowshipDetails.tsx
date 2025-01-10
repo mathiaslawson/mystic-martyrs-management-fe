@@ -23,7 +23,7 @@ import {
   CalendarDays,
   ArrowLeft,
   Edit,
-  Trash2,
+  // Trash2,
   Loader,
   RefreshCw,
   MapPin,
@@ -41,7 +41,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAction } from "next-safe-action/hooks";
-import { withAuth } from "@/components/hoc/withAuth";
 import { formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -50,9 +49,10 @@ import {
   getFellowshipByID,
   updateFellowship,
 } from "@/app/actions/fellowships";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
-const ZoneDetail = ({
+const FellowshipDetails = ({
   data,
 }: {
   data: {
@@ -152,7 +152,9 @@ const ZoneDetail = ({
   const fellowshipData = details?.data?.data;
 
   if (!fellowshipData) {
-    return <div>No data available</div>;
+    return <div>
+      <Skeleton className="h-[100svh] w-max"></Skeleton>
+    </div>;
   }
 
   return (
@@ -233,9 +235,9 @@ const ZoneDetail = ({
             </Dialog>
             <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
               <DialogTrigger asChild>
-                <Button className="text-black">
+                {/* <Button className="text-black">
                   <Trash2 className="mr-2 h-4" /> Delete
-                </Button>
+                </Button> */}
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -463,4 +465,4 @@ Zone Associated with Fellowship
   );
 };
 
-export default withAuth(ZoneDetail);
+export default (FellowshipDetails);
