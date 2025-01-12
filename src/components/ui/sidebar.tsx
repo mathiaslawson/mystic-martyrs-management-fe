@@ -8,7 +8,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Home,
-  Users,
   Menu,
   ArrowLeftIcon,
   Church,
@@ -20,20 +19,9 @@ import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 
 const AdminItems = [
   { name: "Home", href: "/home", icon: Home },
-  { name: "Members", href: "/members", icon: Users },
   { name: "Fellowships", href: "/fellowships", icon: Church },
   { name: "Zones", href: "/zones", icon: Navigation },
   { name: "Cells", href: "/cells", icon: Radar },
-  {
-    name: "Attendance Records",
-    href: "/attendance/attendance-records",
-    icon: Radar,
-  },
-  {
-    name: "Cell Member Statistics",
-    href: "/attendance/cell-member-stats",
-    icon: Radar,
-  },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
 ];
