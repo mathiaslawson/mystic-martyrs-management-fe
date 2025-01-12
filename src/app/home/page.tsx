@@ -106,7 +106,7 @@ function Home() {
 
               {/* Notify */}
               <div className="border-2 border-purple-600 p-4 rounded-md bg-gradient-to-r from-purple-500 to-purple-700 shadow-lg">
-                <div className="flex items-center justify-between h-[25svh]">
+                <div className="flex items-center justify-between h-auto py-5">
                   <div className="flex items-center space-x-4 text-purple-200">
                     <div>
                       <h2 className="text-3xl font-bold text-white mb-10">
