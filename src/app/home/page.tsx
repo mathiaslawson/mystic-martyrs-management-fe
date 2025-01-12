@@ -112,11 +112,10 @@ function Home() {
                       <h2 className="text-3xl font-bold text-white mb-10">
                         {me?.data?.member?.cell?.cell_name ||
                           me?.data?.member?.zone?.zone_name ||
-                          me?.data?.member?.fellowship?.fellowship_name}
+                          me?.data?.member?.fellowship?.fellowship_name  }
+                          
                       </h2>
-                      <h2 className="text-3xl font-bold text-white">
-                        Shalom, {me?.data?.firstname} {me?.data.lastname}
-                      </h2>
+                    
                       <p className="font-light text-md mb-11">
                         {me?.data?.role === "ZONE_LEADER" && "Zone Leader"}
                         {me?.data?.role === "ADMIN" && "Admin"}
