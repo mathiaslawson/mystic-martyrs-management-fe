@@ -20,10 +20,10 @@ import { getCellsByID } from "../actions/cells";
 
 function Home() {
   const { me } = useAuthMemberStore();
-  const role = me?.data.member.role;
+  const role = me?.data?.member?.role;
 
   const cell_id: string | "" =
-    me?.data.role === "CELL_LEADER" ? me?.data.member?.cell_id : " ";
+    me?.data?.role === "CELL_LEADER" ? me?.data.member?.cell_id : " ";
 
   const {
     execute: getDash,
