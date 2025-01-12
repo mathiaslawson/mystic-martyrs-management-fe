@@ -8,7 +8,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Home,
-  Users,
   Menu,
   ArrowLeftIcon,
   Church,
@@ -20,20 +19,9 @@ import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 
 const AdminItems = [
   { name: "Home", href: "/home", icon: Home },
-  { name: "Members", href: "/members", icon: Users },
   { name: "Fellowships", href: "/fellowships", icon: Church },
   { name: "Zones", href: "/zones", icon: Navigation },
   { name: "Cells", href: "/cells", icon: Radar },
-  {
-    name: "Attendance Records",
-    href: "/attendance/attendance-records",
-    icon: Radar,
-  },
-  {
-    name: "Cell Member Statistics",
-    href: "/attendance/cell-member-stats",
-    icon: Radar,
-  },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
 ];
@@ -70,12 +58,14 @@ const FellowshipLeaderItems = [
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
 ];
 
-const MemberItems = [{ name: "Logout", href: "/logout", icon: ArrowLeftIcon },];
+const MemberItems = [{ name: "Logout", href: "/logout", icon: ArrowLeftIcon }];
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const { me } = useAuthMemberStore();
+  const { me, isLoading } = useAuthMemberStore(); // Assuming isLoading is available.
+
+  const role = me?.data?.role;
 
   return (
     <>
@@ -91,11 +81,19 @@ export default function Sidebar() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-[240px] p-0">
-          <SidebarContent pathname={pathname} role={me?.data.member.role} />
+          {isLoading ? (
+            <LoadingSidebar />
+          ) : (
+            <SidebarContent pathname={pathname} role={role} />
+          )}
         </SheetContent>
       </Sheet>
       <aside className="hidden lg:flex h-screen w-[240px] flex-col fixed inset-y-0">
-        <SidebarContent pathname={pathname} role={me?.data.member.role} />
+        {isLoading ? (
+          <LoadingSidebar />
+        ) : (
+          <SidebarContent pathname={pathname} role={role} />
+        )}
       </aside>
     </>
   );
@@ -127,6 +125,14 @@ function SidebarContent({
 
   const sidebarItems = getSidebarItems();
 
+  if (!role) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p>No role assigned. Please contact your administrator.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full flex-col border-r bg-neutral-100 text-black">
       <div className="flex h-14 items-center border-b px-4">
@@ -153,6 +159,14 @@ function SidebarContent({
           ))}
         </nav>
       </ScrollArea>
+    </div>
+  );
+}
+
+function LoadingSidebar() {
+  return (
+    <div className="flex h-full items-center justify-center">
+      <p>Loading sidebar...</p>
     </div>
   );
 }
