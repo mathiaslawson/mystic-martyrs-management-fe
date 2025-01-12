@@ -20,7 +20,7 @@ import { getCellsByID } from "../actions/cells";
 
 function Home() {
   const { me } = useAuthMemberStore();
-  const role = me?.data?.member?.role;
+  const role = me?.data?.role;
 
   const cell_id: string | "" =
     me?.data?.role === "CELL_LEADER" ? me?.data.member?.cell_id : " ";
@@ -41,7 +41,7 @@ function Home() {
       console.error(e);
       toast.error("An Error Occured");
     }
-  }, [getDash, getCellsByID]);
+  }, [getDash, cell_id]);
 
   const shouldShowCard = (cardType: string) => {
     if (role === "ADMIN") return true;
@@ -116,6 +116,7 @@ function Home() {
                           
                       </h2>
                     
+                    <p>Shalom, {me?.data?.member.firstname}</p>
                       <p className="font-light text-md mb-11">
                         {me?.data?.role === "ZONE_LEADER" && "Zone Leader"}
                         {me?.data?.role === "ADMIN" && "Admin"}

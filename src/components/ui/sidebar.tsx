@@ -70,12 +70,14 @@ const FellowshipLeaderItems = [
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
 ];
 
-const MemberItems = [{ name: "Logout", href: "/logout", icon: ArrowLeftIcon },];
+const MemberItems = [{ name: "Logout", href: "/logout", icon: ArrowLeftIcon }];
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const { me } = useAuthMemberStore();
+  const { me, isLoading } = useAuthMemberStore(); // Assuming isLoading is available.
+
+  const role = me?.data?.role;
 
   return (
     <>
@@ -91,11 +93,19 @@ export default function Sidebar() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-[240px] p-0">
-          <SidebarContent pathname={pathname} role={me?.data.member.role} />
+          {isLoading ? (
+            <LoadingSidebar />
+          ) : (
+            <SidebarContent pathname={pathname} role={role} />
+          )}
         </SheetContent>
       </Sheet>
       <aside className="hidden lg:flex h-screen w-[240px] flex-col fixed inset-y-0">
-        <SidebarContent pathname={pathname} role={me?.data.member.role} />
+        {isLoading ? (
+          <LoadingSidebar />
+        ) : (
+          <SidebarContent pathname={pathname} role={role} />
+        )}
       </aside>
     </>
   );
@@ -127,6 +137,14 @@ function SidebarContent({
 
   const sidebarItems = getSidebarItems();
 
+  if (!role) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p>No role assigned. Please contact your administrator.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full flex-col border-r bg-neutral-100 text-black">
       <div className="flex h-14 items-center border-b px-4">
@@ -153,6 +171,14 @@ function SidebarContent({
           ))}
         </nav>
       </ScrollArea>
+    </div>
+  );
+}
+
+function LoadingSidebar() {
+  return (
+    <div className="flex h-full items-center justify-center">
+      <p>Loading sidebar...</p>
     </div>
   );
 }
