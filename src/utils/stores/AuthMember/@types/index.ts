@@ -1,4 +1,4 @@
-export  interface AuthMemebr {
+export  interface AuthMember {
   data: {
     user_id: string;
     email: string;
@@ -14,6 +14,7 @@ export  interface AuthMemebr {
       | "FELLOWSHIP_LEADER"
       | "CELL_LEADER"
       | "ZONE_LEADER";
+
     is_active: boolean;
     created_at: string;
     updated_at: string;
@@ -38,12 +39,27 @@ export  interface AuthMemebr {
       address: string;
       created_at: string;
       updated_at: string;
+      cell: {
+        cell_name: string;
+        fellowship_id: string;
+        cell_id: string;
+      };
+      zone: {
+        zone_name: string;
+        fellowship_id: string;
+        zone_id: string;
+      };
+      fellowship: {
+        fellowship_name: string;
+        fellowship_id: string;
+
+      };
     };
   };
 };
 
 
 export interface AuthMemberActionsStore {
-    me: AuthMemebr | null
-    setMe: (me: AuthMemebr | null) => void
+    me: AuthMember | null
+    setMe: (me: AuthMember | null) => void
 }

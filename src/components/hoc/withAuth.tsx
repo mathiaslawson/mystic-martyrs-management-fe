@@ -1,36 +1,66 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie'; // Use js-cookie for client-side cookie management
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
+import { getAccountDataAction } from "@/app/actions/auth";
+import { toast } from "sonner";
+import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 
-export function withAuth<T extends object>(WrappedComponent: React.ComponentType<T>) {
+
+export function withAuth<T extends object>(
+  WrappedComponent: React.ComponentType<T>
+) {
   return function WithAuth(props: T) {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(true);
+    const { me, setMe } = useAuthMemberStore();
 
-    // Check if access_token exists in cookies
+    const {
+      execute: getAccountData,
+      status,
+      result: accountData,
+    } = useAction(getAccountDataAction);
+
     useEffect(() => {
-      const accessToken = Cookies.get('access_token'); // Retrieve token using js-cookie
-      if (accessToken) {
-        setIsLoading(false); // User is authenticated, stop loading
-      } else {
-        // No access token, immediately redirect to the OAuth login page
-        router.push('/auth');
-      }
-    }, [router]); // Ensure router is included in the dependency array
+      const checkAuth = async () => {
+        if (!me) {
+          getAccountData();
+        }
+      };
 
-    // Show loading state until authentication check is done
-    if (isLoading) {
+      checkAuth();
+    }, [getAccountData, me]);
+
+    useEffect(() => {
+      if (accountData) {
+        if (accountData.serverError) {
+          toast.warning("Session Expired, Please Login Again!");
+          router.replace("/auth");
+        } else if (accountData.data) {
+          setMe(accountData.data);
+        }
+      }
+    }, [accountData, router, setMe]);
+
+    // Show loading state when checking authentication
+    if (status === "executing" || (!me && !accountData)) {
       return (
-        <div className="flex flex-col justify-center items-center h-screen font-bold text-black-900 text-3xl px-5 md:px-10">
-          <span className="loader-book"></span>
-          <h1 className="text-center">Mystic-Martyrs-Management</h1>
+        <div className="flex flex-col justify-center items-center h-screen bg-white dark:bg-gray-900">
+          <span className="loader-book" />
+          <h1 className="text-center font-bold text-3xl mt-4 text-gray-800 dark:text-white">
+            Mystic-Martyrs-Management
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
+            Verifying your session...
+          </p>
         </div>
       );
     }
 
-    // If authenticated, render the WrappedComponent
-    return <WrappedComponent {...props} />;
+    if (accountData?.serverError) {
+      return null; 
+    }
+
+    return me ? <WrappedComponent {...props} /> : null;
   };
 }

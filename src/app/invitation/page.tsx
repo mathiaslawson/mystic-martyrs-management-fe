@@ -1,169 +1,344 @@
 "use client";
+
+import { useState, useEffect } from "react";
+import { useAction } from "next-safe-action/hooks";
+import { Button } from "@/components/ui/button";
+import { Loader } from "lucide-react";
+import Select from "react-select";
+import { getAllCells } from "../actions/cells";
+import { getAllFellowships } from "../actions/fellowships";
 import { withAuth } from "@/components/hoc/withAuth";
-import React, { useState } from "react";
-import { toast } from "sonner"
+import { Options } from "./types";
+import { getAllZones } from "../actions/zones";
+import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
+import { generateInviteCode } from "../actions/auth";
+import InviteCodeDialog from "./inviteCodeDialogue";
+import { Label } from "@/components/ui/label";
 
-const Invitation = () => {
-  enum UserRole {
-    MEMBER = "MEMBER",
-    FELLOWSHIP_LEADER = "FELLOWSHIP_LEADER",
-    ZONE_LEADER = "ZONE_LEADER",
-    CELL_LEADER = "CELL_LEADER",
-    ADMIN = "ADMIN",
+function AddCellModal() {
+  const [isOpen] = useState(false);
+
+  const [selectedFellowship, setSelectedFellowship] = useState<Options | null>(
+    null
+  );
+
+  const [selectedRole, setSelectedRole] = useState<Options | null>(null);
+
+  const [fellowshipOptions, setFellowshipOptions] = useState<Options[]>([]);
+
+  // cells
+  const [cellOptions, setCellOptions] = useState<Options[]>([]);
+  const [selectedCell, setSelectedCell] = useState<Options | null>(null);
+
+  // zones
+  const [zoneOptions, setZoneOptions] = useState<Options[]>([]);
+  const [selectedZone, setSelectedZone] = useState<Options | null>(null);
+
+  const {
+    execute: executeGetFellowships,
+    status: getFellowshipsStatus,
+    result: fellowshipsResult,
+  } = useAction(getAllFellowships);
+  const {
+    execute: executeGetCells,
+    status: getCellStatus,
+    result: cellResult,
+  } = useAction(getAllCells);
+  const {
+    execute: executeGetZones,
+    status: getZoneStatus,
+    result: zoneResult,
+  } = useAction(getAllZones);
+  const {
+    execute: executeGen,
+    status: genStat,
+    result: genRes,
+  } = useAction(generateInviteCode);
+
+  useEffect(() => {
+    executeGetCells();
+    executeGetFellowships();
+    executeGetZones();
+  }, [isOpen, executeGetCells, executeGetFellowships]);
+
+ 
+  useEffect(() => {
+    // fellowship
+    if (fellowshipsResult?.data) {
+      const options = fellowshipsResult?.data?.data?.map(
+        (fellowship: { fellowship_id: string; fellowship_name: string }) => ({
+          value: fellowship.fellowship_id,
+          label: fellowship.fellowship_name,
+        })
+      );
+      setFellowshipOptions(options);
+    }
+    // cell
+    if (cellResult?.data) {
+      const options = cellResult?.data?.data?.map(
+        (cell: { cell_id: string; cell_name: string }) => ({
+          value: cell.cell_id,
+          label: cell.cell_name,
+        })
+      );
+      setCellOptions(options);
+      // zones
+      if (zoneResult?.data) {
+        const options = zoneResult?.data?.data?.map(
+          (zone: { zone_id: string; zone_name: string }) => ({
+            value: zone.zone_id,
+            label: zone.zone_name,
+          })
+        );
+        setZoneOptions(options);
+      }
+    }
+  }, [fellowshipsResult, cellResult, zoneResult]);
+
+  const { me } = useAuthMemberStore();
+
+
+   const roleOptions: Options[] = [
+    {
+      value: "MEMBER",
+      label: "Member",
+    },
+    {
+      value: "ZONE_LEADER",
+      label: "Zone Leader",
+    },
+    {
+      value: "CELL_LEADER",
+      label: "Cell Leader",
+    },
+    {
+      value: "FELLOWSHIP_LEADER",
+      label: "Fellowship Leader",
+    },
+    {
+      value: "ADMIN",
+      label: "Admin",
+    },
+  ];
+
+  type Role = "MEMBER" | "ZONE_LEADER" | "CELL_LEADER" | "FELLOWSHIP_LEADER" | "ADMIN";
+
+
+
+  const getRoleOptions = (userRole: Role): Options[] => {
+  switch (userRole) {
+    case "ADMIN":
+      return roleOptions;
+    
+    case "ZONE_LEADER":
+      return roleOptions.filter(
+        option => 
+          // option.value === "ZONE_LEADER" || 
+          option.value === "FELLOWSHIP_LEADER"
+      );
+    
+    case "CELL_LEADER":
+      return roleOptions.filter(
+        option => 
+          option.value === "CELL_LEADER" || 
+          option.value === "MEMBER"
+      );
+    
+    case "FELLOWSHIP_LEADER":
+      return roleOptions.filter(
+        option => 
+          option.value === "CELL_LEADER"
+      );
+    
+    case "MEMBER":
+      return roleOptions.filter(option => option.value === "MEMBER");
+    
+    default:
+      return [];
   }
+};
+const userRole = me?.data?.member?.role as Role
 
-  const roles = [
-    { id: UserRole.MEMBER, label: "Member" },
-    { id: UserRole.FELLOWSHIP_LEADER, label: "Fellowship Leader" },
-    { id: UserRole.ZONE_LEADER, label: "Zone Leader" },
-    { id: UserRole.CELL_LEADER, label: "Cell Leader" },
-    { id: UserRole.ADMIN, label: "Admin" },
-  ];
+const availableOptions = getRoleOptions(userRole);
 
-  const tokens = {
-    [UserRole.ADMIN]: process.env.NEXT_PUBLIC_ADMINTOKEN,
-    [UserRole.ZONE_LEADER]: process.env.NEXT_PUBLIC_ZONETOKEN,
-    [UserRole.FELLOWSHIP_LEADER]: process.env.NEXT_PUBLIC_FELLOWSHIPTOKEN,
-    [UserRole.CELL_LEADER]: process.env.NEXT_PUBLIC_CELLTOKEN,
-    [UserRole.MEMBER]: process.env.NEXT_PUBLIC_MEMBERTOKEN,
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const member_id = me?.data.member.member_id;
+
+    executeGen({
+      cellId: selectedCell?.value,
+      role: selectedRole?.value as string,
+      fellowshipId: selectedFellowship?.value,
+      member_id: member_id as string,
+      zoneId: selectedZone?.value,
+    });
   };
 
-  const [currentUserRole, setCurrentUserRole] = useState<UserRole>(UserRole.ADMIN); // Mock current user role
-  const [role, setRole] = useState<UserRole | "">("");
-  const [invitationTarget, setInvitationTarget] = useState<string | "">("");
-  const [loading, setLoading] = useState<boolean>(false);
+  useEffect(() => {
+    const inviteLink = genRes?.data?.inviteLink;
+    console.log("inint", inviteLink);
 
-  const roleHierarchy = [
-    UserRole.MEMBER,
-    UserRole.CELL_LEADER,
-    UserRole.FELLOWSHIP_LEADER,
-    UserRole.ZONE_LEADER,
-    UserRole.ADMIN,
-  ];
-  const canGenerateInvitation = role && roleHierarchy.indexOf(role) < roleHierarchy.indexOf(currentUserRole);
-setCurrentUserRole(UserRole.ADMIN)
-  const generateInvitationLink = async () => {
-    if (!invitationTarget || !role) return;
+    if (genStat === "hasSucceeded" && genRes) {
+      console.log(genRes, "okay okay");
+      const inviteLink = genRes?.data?.data?.inviteLink;
+      const match = inviteLink?.match(/inviteCode=([\w-]+)/);
+      
+      const inviteCode = match ? match[1] : null;
 
-    const token = tokens[role as UserRole];
-    const baseUrl = "https://mystic-be.vercel.app/api/v1/auth/invite";
-    const finalUrl = `${baseUrl}/${token}`;
-
-    try {
-      setLoading(true);
-      await navigator.clipboard.writeText(finalUrl);
-      setLoading(false);
-      toast.success("Invitation link generated and copied to clipboard!");
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
-      toast.error("Failed to copy the invitation link. Please try again.");
-    }
-  };
-
-  const renderConditionalContent = () => {
-    if (role === UserRole.MEMBER || role === UserRole.CELL_LEADER) {
-      return (
-        <div className="flex flex-col justify-start items-start w-full">
-          <label htmlFor="cell">Cell of Invitation</label>
-          <select
-            name="cell"
-            id="cell"
-            className="p-2 mt-2 border-2 border-gray-300 rounded-lg w-full"
-            value={invitationTarget}
-            onChange={(e) => setInvitationTarget(e.target.value)}
-          >
-            <option value="">Select a Cell</option>
-            <option value="Cell A">Cell A</option>
-            <option value="Cell B">Cell B</option>
-          </select>
-        </div>
-      );
-    } else if (role === UserRole.FELLOWSHIP_LEADER) {
-      return (
-        <div className="flex flex-col justify-center items-start w-full">
-          <label htmlFor="fellowship">Fellowship of Invitation</label>
-          <select
-            name="fellowship"
-            id="fellowship"
-            className="p-2 mt-2 border-2 border-gray-300 rounded-lg w-full"
-            value={invitationTarget}
-            onChange={(e) => setInvitationTarget(e.target.value)}
-          >
-            <option value="">Select a Fellowship</option>
-            <option value="Fellowship A">Fellowship A</option>
-            <option value="Fellowship B">Fellowship B</option>
-          </select>
-        </div>
-      );
-    } else if (role === UserRole.ZONE_LEADER) {
-      return (
-        <div className="flex flex-col justify-center items-start w-full">
-          <label htmlFor="zone">Zone of Invitation</label>
-          <select
-            name="zone"
-            id="zone"
-            className="p-2 mt-2 border-2 border-gray-300 rounded-lg w-full"
-            value={invitationTarget}
-            onChange={(e) => setInvitationTarget(e.target.value)}
-          >
-            <option value="">Select a Zone</option>
-            <option value="Zone A">Zone A</option>
-            <option value="Zone B">Zone B</option>
-          </select>
-        </div>
-      );
-    } else if (role === UserRole.ADMIN) {
-      return <p>You are inviting an admin to the organization.</p>;
-    }
-  };
+      if (inviteCode) {
+        console.log("Extracted UUID:", inviteCode);
+        setSelectedCell(null)
+        setSelectedRole(null)
+        setSelectedFellowship(null)
+        setSelectedZone(null)
+      } else {
+        console.warn("Invite code not found in the URL.");
+      }
+    } 
+  }, [genRes]);
 
   return (
-    <main className="h-screen w-full px-24 bg-white flex flex-col justify-center items-start ">
+    <div className="mx-auto w-[550px] mt-[100px]">
       <h1 className="text-3xl font-semibold">Invitation</h1>
-      <p className="font-DMSans md:w-3/4 text-justify">
-        Please select the appropriate parameters for the invite you want to generate.
+      <p className="font-DMSans md:w-4/4 text-justify mb-5">
+        Please select the appropriate parameters for the invite you want to
+        generate.
       </p>
-      <form className="w-full">
-        <div className="flex flex-col justify-center items-start mt-8">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <Label htmlFor="role_id">Role</Label>
+          <Select
+            id="role_id"
+            options={availableOptions}
+            value={selectedRole}
+            onChange={(newValue) => {
+              setSelectedRole(newValue as Options);
+              setSelectedFellowship(null);
+              setSelectedCell(null);
+              setSelectedZone(null);
+            }}
+            placeholder="Select Role"
+          />
+        </div>
 
-      
-        <div className="flex flex-col justify-center items-start w-full">
-          <label htmlFor="role">Please select the role of your guest</label>
-          <select
-            name="role"
-            id="role"
-            className="p-2 mt-2 border-2 border-gray-300 rounded-lg w-full"
-            value={role}
-            onChange={(e) => setRole(e.target.value as UserRole)}
+        {selectedRole?.value === "CELL_LEADER" ? (
+          <>
+            <div>
+              <Label htmlFor="fellowship_id">Cell Leader</Label>
+              <Select
+                id="cell_id"
+                options={cellOptions}
+                value={selectedCell}
+                onChange={(newValue) => setSelectedCell(newValue as Options)}
+                placeholder="Select Cell"
+                isLoading={getCellStatus === "executing"}
+                isDisabled={getCellStatus === "executing"}
+              />
+            </div>
+            <div className="mb-10 mt-10">
+              <b>Note:</b> When this link is generated, individual who use it
+              would be able to gain Adminstrative Cell access to the associate
+              zone selected.
+            </div>
+          </>
+        ) : selectedRole?.value === "FELLOWSHIP_LEADER" ? (
+          <>
+            <div>
+              <Label htmlFor="fellowship_id">Fellowship</Label>
+              <Select
+                id="fellowship_id"
+                options={fellowshipOptions}
+                value={selectedFellowship}
+                onChange={(newValue) =>
+                  setSelectedFellowship(newValue as Options)
+                }
+                placeholder="Select Fellowship"
+                isLoading={getFellowshipsStatus === "executing"}
+                isDisabled={getFellowshipsStatus === "executing"}
+              />
+            </div>
+            <div className="mb-10 mt-10">
+              <b>Note:</b> When this link is generated, individual who use it
+              would be able to gain Adminstrative Fellowship access to the
+              associate zone selected.
+            </div>
+          </>
+        ) : selectedRole?.value === "ZONE_LEADER" ? (
+          <>
+            <div>
+              <Label htmlFor="fellowship_id">Zone</Label>
+              <Select
+                id="zone_id"
+                options={zoneOptions}
+                value={selectedZone}
+                onChange={(newValue) => setSelectedZone(newValue as Options)}
+                placeholder="Select Zone"
+                isLoading={getZoneStatus === "executing"}
+                isDisabled={getZoneStatus === "executing"}
+              />
+            </div>
+            <div className="mb-10 mt-10">
+              <b>Note:</b> When this link is generated, individual who use it
+              would be able to gain Adminstrative Zonal access to the associate
+              zone selected.
+            </div>
+          </>
+        ) : selectedRole?.value === "MEMBER" ? (
+          <>
+            <div>
+              <Label htmlFor="cell_id">Cell</Label>
+              <Select
+                id="cell_id"
+                options={fellowshipOptions}
+                value={selectedFellowship}
+                onChange={(newValue) =>
+                  setSelectedFellowship(newValue as Options)
+                }
+                placeholder="Select Cell"
+                isLoading={getFellowshipsStatus === "executing"}
+                isDisabled={getFellowshipsStatus === "executing"}
+              />
+            </div>
+            <div className="mb-10 mt-10">
+              <b>Note:</b> When this link is generated, individual who use it
+              would be able to gain join the associate cell selected.
+            </div>
+          </>
+        ) : selectedRole?.value === "ADMIN" ? (
+          <>
+            <div className="mb-10 mt-10">
+              <b>Note:</b> When this link is generated, individual who use it
+              would be able to gain Adminstrative access over the system.
+            </div>
+          </>
+        ) : (
+          ""
+        )}
+
+        <div className="flex gap-2 mt-4">
+          <Button
+            type="submit"
+            className="w-full bg-green-600 text-white hover:bg-green-600/90"
+            disabled={
+              getCellStatus === "executing" ||
+              getFellowshipsStatus === "executing" ||
+              getZoneStatus === 'executing' || 
+              genStat === 'executing'
+            }
           >
-            <option value="">Select a Role</option>
-            {roles.map((role) => (
-              <option key={role.id} value={role.id}>
-                {role.label}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="my-4 w-full">{renderConditionalContent()}</div>
-        <span className="font-Poppins text-sm text-gray-500">Please ensure that the user being invited has a Google account</span>
-        </div>
-        <div className=" w-full flex flex-row justify-end items-end">
-        <button
-          type="button"
-          className="font-Poppins w-full px-32 py-3 bg-purple-600 hover:bg-purple-800 hover:cursor-pointer text-white text-sm rounded-lg mt-12"
-          disabled={loading || !invitationTarget || !canGenerateInvitation}
-          onClick={generateInvitationLink}
-        >
-          {loading ?
-          (
-            <span className="loader"></span>
-          ) : "Generate Invitation Link"}
-        </button>
+           {genStat === 'executing' && <Loader className="animate-spin text-sm mx-4"/>} Generate Invitation Link
+          </Button>
         </div>
       </form>
-    </main>
-  );
-};
 
-export default withAuth(Invitation) ;
+      <InviteCodeDialog genRes={genRes.data?.data} genStat={genStat} />
+
+    </div>
+
+    
+  );
+}
+
+export default withAuth(AddCellModal);

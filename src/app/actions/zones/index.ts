@@ -65,8 +65,8 @@ export const updateZone = actionClient
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async ({ parsedInput: { id, zone_name, zone_location, zone_leader_id } }) => {
-     const authHeader = await getAuthHeader();
+  .action(async ({ parsedInput: { id, zone_name, zone_location} }) => {
+    const authHeader = await getAuthHeader();
     const response = await fetch(
       `https://mystic-be.vercel.app/api/v1/zones/${id}`,
       {
@@ -79,7 +79,6 @@ export const updateZone = actionClient
         body: JSON.stringify({
           zone_name: zone_name,
           zone_location: zone_location,
-          zone_leader_id: zone_leader_id,
         }),
       }
     );
@@ -105,6 +104,9 @@ export const deleteZone = actionClient
         },
       }
     );
+
+    console.log(response.json(), 'del zone responsse')
+
     return response.json();
   });
 

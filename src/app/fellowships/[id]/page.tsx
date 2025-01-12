@@ -3,7 +3,6 @@ import FellowshipDetails from './FellowshipDetails'
 
 
 // This is a mock function to simulate fetching zone data
-// In a real application, you would replace this with an actual API call
 async function getZoneData(id: string) {
   // Simulating an API call
   await new Promise(resolve => setTimeout(resolve, 1000))

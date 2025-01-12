@@ -8,54 +8,31 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Loader, Plus } from 'lucide-react'
 import { toast } from 'sonner'
-import Select from 'react-select'
-import { addZone, getZoneLeaders } from '@/app/actions/zones'
+import { addZone } from '@/app/actions/zones'
 
-interface ZoneLeader {
-  value: string
-  label: string
-}
 
 export function AddZoneModal({ onZoneAdded }: { onZoneAdded: () => void }) {
   const [isOpen, setIsOpen] = useState(false)
   const [zoneName, setZoneName] = useState('')
   const [zoneLocation, setZoneLocation] = useState('')
-  const [selectedLeader, setSelectedLeader] = useState<ZoneLeader | null>(null)
-  const [zoneLeaderOptions, setZoneLeaderOptions] = useState<ZoneLeader[]>([])
-  const [shouldFetchLeaders, setShouldFetchLeaders] = useState(false)
+
 
   const { execute: executeAddZone, status: addZoneStatus, result: addZoneResult, reset: resetAddZone } = useAction(addZone)
-  const { execute: executeGetZoneLeaders, status: getZoneLeadersStatus, result: zoneLeadersResult } = useAction(getZoneLeaders)
+ 
 
-  useEffect(() => {
-    if (isOpen && shouldFetchLeaders) {
-      executeGetZoneLeaders()
-      setShouldFetchLeaders(false)
-    }
-  }, [isOpen, shouldFetchLeaders, executeGetZoneLeaders])
-
-  useEffect(() => {
-    if (zoneLeadersResult?.data) {
-      const options = zoneLeadersResult.data.map((leader: { member_id: string; firstname: string; lastname: string }) => ({
-        value: leader.member_id,
-        label: `${leader.firstname} ${leader.lastname}`
-      }))
-      setZoneLeaderOptions(options)
-    }
-  }, [zoneLeadersResult])
 
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault()
 
-  if (!zoneName || !zoneLocation || !selectedLeader) {
+  if (!zoneName || !zoneLocation) {
     toast.error('Please fill in all fields')
     return
   }
 
    executeAddZone({
     zone_name: zoneName,
-    zone_leader_id: selectedLeader.value,
-    zone_location: zoneLocation
+    zone_location: zoneLocation, 
+    zone_leader_id: ""
   })
 }
 
@@ -65,7 +42,6 @@ const handleActionComplete = useCallback(() => {
     setIsOpen(false)
     setZoneName('')
     setZoneLocation('')
-    setSelectedLeader(null)
     onZoneAdded()
     resetAddZone()  
   } else if (addZoneResult?.data?.message) {
@@ -85,9 +61,7 @@ useEffect(() => {
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open)
-    if (open) {
-      setShouldFetchLeaders(true)
-    }
+  
   }
 
   return (
@@ -120,22 +94,11 @@ useEffect(() => {
               placeholder="Enter zone location"
             />
           </div>
-          <div>
-            <Label htmlFor="zone_leader">Zone Leader</Label>
-            <Select
-              id="zone_leader"
-              options={zoneLeaderOptions}
-              value={selectedLeader}
-              onChange={(newValue) => setSelectedLeader(newValue as ZoneLeader)}
-              placeholder="Select zone leader"
-              isLoading={getZoneLeadersStatus === 'executing'}
-              isDisabled={getZoneLeadersStatus === 'executing'}
-            />
-          </div>
+          
           <Button
             type="submit"
             className="w-full bg-yellow-600 text-white hover:bg-yellow-700"
-            disabled={addZoneStatus === 'executing' || getZoneLeadersStatus === 'executing'}
+            disabled={addZoneStatus === 'executing'}
           >
             {addZoneStatus === 'executing' ? (
               <>

@@ -1,18 +1,30 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import { AuthMemberActionsStore } from "./@types";
+import { AuthMember } from "./@types";
 
-// Custom storage wrapper for localStorage
+
+interface AuthMemberActionsStore {
+  me: AuthMember | null;
+  isLoading: boolean;
+  setMe: (me: AuthMember | null) => void;
+  setLoading: (loading: boolean) => void;
+}
+
 const localStorageWrapper = {
   getItem: (name: string) => {
+    if (typeof window === "undefined") return null;
     const value = localStorage.getItem(name);
     return value ? JSON.parse(value) : null;
   },
   setItem: (name: string, value: unknown) => {
-    localStorage.setItem(name, JSON.stringify(value));
+    if (typeof window !== "undefined") {
+      localStorage.setItem(name, JSON.stringify(value));
+    }
   },
   removeItem: (name: string) => {
-    localStorage.removeItem(name);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(name);
+    }
   },
 };
 
@@ -21,14 +33,13 @@ export const useAuthMemberStore = create<AuthMemberActionsStore>()(
     persist(
       (set) => ({
         me: null,
-        setMe: (me) => {
-          console.log("Setting me:", me);
-          set({ me });
-        },
+        isLoading: false,
+        setMe: (me) => set({ me }),
+        setLoading: (loading) => set({ isLoading: loading }),
       }),
       {
-        name: "AuthMemberStore", // Key for the storage
-        storage: localStorageWrapper, // Use custom storage wrapper
+        name: "AuthMemberStore",
+        storage: localStorageWrapper,
       }
     ),
     { name: "AuthMemberStore", enabled: true }

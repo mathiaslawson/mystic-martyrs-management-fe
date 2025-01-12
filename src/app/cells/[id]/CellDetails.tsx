@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { CalendarDays, ArrowLeft, Edit, Trash2, Loader, RefreshCw } from "lucide-react"
+import { CalendarDays, ArrowLeft, Edit, Loader, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import {
   Dialog,
@@ -70,7 +70,6 @@ const CellDetail = ({ data }: { data: {cell_id: string, cell_name: string, cell_
     updateDetails({
       id: details?.data?.data?.cell_id,
       cell_name: editData.cell_name || details?.data?.data?.cell_name,
-      cell_leader_id: editData.cell_leader_id || details?.data?.data?.cell_leader_id,
     })
   }
 
@@ -160,9 +159,9 @@ const CellDetail = ({ data }: { data: {cell_id: string, cell_name: string, cell_
             </Dialog>
             <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
               <DialogTrigger asChild>
-                <Button className="text-black">
+                {/* <Button className="text-black">
                   <Trash2 className="mr-2 h-4" /> Delete
-                </Button>
+                </Button> */}
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -189,7 +188,7 @@ const CellDetail = ({ data }: { data: {cell_id: string, cell_name: string, cell_
         <h1 className="text-2xl font-bold mb-8 text-neutral-900">{cellData.cell_name}</h1>
         
         <div className="grid gap-8 md:grid-cols-12 lg:grid-cols-3 mb-8">
-          <Card className="bg-white overflow-hidden hover:shadow-lg transition-all duration-300 group lg:col-span-3">
+          <Card className="bg-white overflow-hidden hover:shadow-lg transition-all duration-300 group lg:col-span-1">
             <CardHeader className="text-black rounded-t-lg bg-green-100">
               <CardTitle>Cell Information</CardTitle>
               <CardDescription className="text-green-900">Details about the cell</CardDescription>
@@ -201,7 +200,7 @@ const CellDetail = ({ data }: { data: {cell_id: string, cell_name: string, cell_
                   <Badge variant="secondary" className="bg-purple-100 text-green-800 px-3 py-1 rounded-full">
                     {cellData.cell_name}
                   </Badge>
-                  <span className="text-sm text-gray-500">ID: {cellData.cell_id}</span>
+                 
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <CalendarDays className="w-5 h-5 text-green-600" />
@@ -225,70 +224,172 @@ const CellDetail = ({ data }: { data: {cell_id: string, cell_name: string, cell_
                   </Badge>
                   <span className="text-sm text-gray-500">ID: {cellData.fellowship?.fellowship_id}</span>
                 </div>
+                {/* <div onClick={()=>{
+                  router.replace(`http://localhost:3001/fellowships/${cellData.fellowship?.fellowship_id}`)
+                }} className="">
+                <div className="text-sm text-neutral-500 mx-4 underline">Visit Fellowship</div>
+                </div> */}
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white overflow-hidden hover:shadow-lg transition-all duration-300 group">
-            <CardHeader className="bg-green-100 text-black rounded-t-lg">
-              <CardTitle>Cell Leader</CardTitle>
-              <CardDescription className="text-green-900">Information about the cell leader</CardDescription>
-              <div className="border-green-600 mt-3 bg-gradient-to-r from-green-500 to-green-700 shadow-lg w-full h-2 rounded-full"></div>
-            </CardHeader>
-            <CardContent className="mt-4">
-              <div className="flex items-center space-x-4 mb-4">
-                <Avatar className="h-16 w-16">
-                  <AvatarImage src={`https://api.dicebear.com/6.x/initials/svg?seed=${cellData.leader.firstname} ${cellData.leader.lastname}`} />
-                  <AvatarFallback>{cellData.leader.firstname[0]}{cellData.leader.lastname[0]}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-medium text-lg">{cellData.leader.firstname} {cellData.leader.lastname}</p>
-                  <p className="text-sm text-gray-500">{cellData.leader.email}</p>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <Badge variant="outline" className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
-                    {cellData.leader.role}
-                  </Badge>
-                  <span>{cellData.leader.gender}</span>
-                </div>
-                <p className="text-sm text-gray-600">Born on {formatDate(cellData.leader.birth_date)}</p>
-                {cellData.leader.occupation && (
-                  <p className="text-sm text-gray-600">Occupation: {cellData.leader.occupation}</p>
-                )}
-                {cellData.leader.address && (
-                  <p className="text-sm text-gray-600">Address: {cellData.leader.address}</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
+      
+           {/* leaders */}
           <Card className="bg-white overflow-hidden hover:shadow-lg transition-all duration-300 group lg:col-span-3">
             <CardHeader className="bg-green-100 text-black rounded-t-lg">
-              <CardTitle>Members</CardTitle>
-              <CardDescription className="text-green-900">Members in this cell</CardDescription>
+              <CardTitle>Cell Leaders</CardTitle>
+              <CardDescription className="text-green-900">
+               Leaders heading this Cell
+              </CardDescription>
               <div className="border-green-600 mt-3 bg-gradient-to-r from-green-500 to-green-700 shadow-lg w-full h-2 rounded-full"></div>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Member Name</TableHead>
+                    <TableHead>Leader Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Role</TableHead>
                     <TableHead>Joined At</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {cellData.members?.map((member: { member_id: string, firstname: string, lastname: string, created_at: string }) => (
-                    <TableRow key={member.member_id}>
-                      <TableCell className="font-medium">{member.firstname} {member.lastname}</TableCell>
-                      <TableCell>{formatDate(member.created_at)}</TableCell>
-                    </TableRow>
-                  ))}
+                  {cellData.leaders?.map(
+                    (leaders: {
+                      member: {
+                      member_id: string;
+                      firstname: string
+                      created_at: string;
+                      lastname: string;
+                      email:string;
+                      role: string;
+                     }
+                    }) => (
+                      <TableRow key={leaders?.member?.member_id}>
+                        <TableCell className="font-medium">
+                          <div className="flex items-center space-x-4 mb-4">
+                            <Avatar className="h-16 w-16">
+                              <AvatarImage
+                                src={`https://api.dicebear.com/6.x/initials/svg?seed=${leaders?.member?.firstname} ${leaders?.member?.lastname}`}
+                              />
+                              <AvatarFallback>
+                                {leaders?.member?.firstname}
+                                {leaders?.member?.lastname}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium text-lg">
+                                {leaders?.member?.firstname} {leaders?.member?.lastname}
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                {leaders?.member?.email}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                         {leaders?.member?.email}
+                        </TableCell>
+                        <TableCell>
+                             <Badge
+                          variant="outline"
+                          className="bg-green-100 text-green-800 px-3 py-1 rounded-full"
+                        >
+                          {leaders?.member?.role}
+                        </Badge>
+                        </TableCell>
+                          <TableCell>
+                          {formatDate(leaders?.member?.created_at)}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
+              <div className="text-center text-neutral-500 mt-10 text-sm">
+                    {cellData.leaders.length === 0 && "No Cell Leaders"}
+                </div>
             </CardContent>
           </Card>
+
+{/* members2 */}
+           <Card className="bg-white overflow-hidden hover:shadow-lg transition-all duration-300 group lg:col-span-3">
+            <CardHeader className="bg-green-100 text-black rounded-t-lg">
+              <CardTitle>Cell Memebers</CardTitle>
+              <CardDescription className="text-green-900">
+               Members within this cell
+              </CardDescription>
+              <div className="border-green-600 mt-3 bg-gradient-to-r from-green-500 to-green-700 shadow-lg w-full h-2 rounded-full"></div>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Joined At</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {cellData.members?.map(
+                    (leaders: {
+                      
+                      member_id: string;
+                      firstname: string
+                      created_at: string;
+                      lastname: string;
+                      email:string;
+                      role: string;
+                     
+                    }) => (
+                      <TableRow key={leaders?.member_id}>
+                        <TableCell className="font-medium">
+                          <div className="flex items-center space-x-4 mb-4">
+                            <Avatar className="h-16 w-16">
+                              <AvatarImage
+                                src={`https://api.dicebear.com/6.x/initials/svg?seed=${leaders?.firstname} ${leaders?.lastname}`}
+                              />
+                              <AvatarFallback>
+                                {leaders?.firstname}
+                                {leaders?.lastname}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium text-lg">
+                                {leaders?.firstname} {leaders?.lastname}
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                {leaders?.email}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                         {leaders?.email}
+                        </TableCell>
+                        <TableCell>
+                             <Badge
+                          variant="outline"
+                          className="bg-green-100 text-green-800 px-3 py-1 rounded-full"
+                        >
+                          {leaders?.role}
+                        </Badge>
+                        </TableCell>
+                          <TableCell>
+                          {formatDate(leaders?.created_at)}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
+                </TableBody>
+              </Table>
+                <div className="text-center text-neutral-500 mt-10 text-sm">
+                    {cellData.members.length === 0 && "No Cell Members"}
+                </div>
+            </CardContent>
+          </Card>
+
         </div>
       </div>
     </div>
