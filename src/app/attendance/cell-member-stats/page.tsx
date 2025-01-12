@@ -12,8 +12,8 @@ function CellMemberStats() {
         <div className="flex items-center justify-between h-[20svh]">
           <div className="flex items-center space-x-4 text-green-200">
             <div>
-              <h2 className="text-3xl font-bold text-white">Cell Statistics</h2>
-              <p className="font-light text-md mb-11">View the attendance statistics of designated cell members.</p>
+              <h2 className="text-3xl font-bold text-white">Cell Members Attendance Performance</h2>
+              <p className="font-light text-md mb-11">View and capture attendance statistics of designated cell members.</p>
             </div>
           </div>
         </div>

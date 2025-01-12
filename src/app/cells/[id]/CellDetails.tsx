@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { CalendarDays, ArrowLeft, Edit, Trash2, Loader, RefreshCw } from "lucide-react"
+import { CalendarDays, ArrowLeft, Edit, Loader, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import {
   Dialog,
@@ -159,9 +159,9 @@ const CellDetail = ({ data }: { data: {cell_id: string, cell_name: string, cell_
             </Dialog>
             <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
               <DialogTrigger asChild>
-                <Button className="text-black">
+                {/* <Button className="text-black">
                   <Trash2 className="mr-2 h-4" /> Delete
-                </Button>
+                </Button> */}
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -224,9 +224,11 @@ const CellDetail = ({ data }: { data: {cell_id: string, cell_name: string, cell_
                   </Badge>
                   <span className="text-sm text-gray-500">ID: {cellData.fellowship?.fellowship_id}</span>
                 </div>
-                {/* <Link href={`fellowships/${cellData.fellowship?.fellowship_id}`}>
+                {/* <div onClick={()=>{
+                  router.replace(`http://localhost:3001/fellowships/${cellData.fellowship?.fellowship_id}`)
+                }} className="">
                 <div className="text-sm text-neutral-500 mx-4 underline">Visit Fellowship</div>
-                </Link> */}
+                </div> */}
               </div>
             </CardContent>
           </Card>

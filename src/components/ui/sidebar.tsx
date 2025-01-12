@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -6,7 +6,16 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Home, Users, Menu, ArrowLeftIcon, Church, Radar, Navigation, UserRoundPlus } from 'lucide-react';
+import {
+  Home,
+  Users,
+  Menu,
+  ArrowLeftIcon,
+  Church,
+  Radar,
+  Navigation,
+  UserRoundPlus,
+} from "lucide-react";
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 
 const AdminItems = [
@@ -15,16 +24,32 @@ const AdminItems = [
   { name: "Fellowships", href: "/fellowships", icon: Church },
   { name: "Zones", href: "/zones", icon: Navigation },
   { name: "Cells", href: "/cells", icon: Radar },
-  { name: "Attendance Records", href: "/attendance/attendance-records", icon: Radar },
-  { name: "Cell Member Statistics", href: "/attendance/cell-member-stats", icon: Radar },
+  {
+    name: "Attendance Records",
+    href: "/attendance/attendance-records",
+    icon: Radar,
+  },
+  {
+    name: "Cell Member Statistics",
+    href: "/attendance/cell-member-stats",
+    icon: Radar,
+  },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
 ];
 
 const CellLeaderItems = [
   { name: "Home", href: "/home", icon: Home },
-  { name: "Attendance Records", href: "/attendance/attendance-records", icon: Radar },
-  { name: "Cell Attendance Statistics", href: "/attendance/cell-member-stats", icon: Radar },
+  {
+    name: "Attendance Records",
+    href: "/attendance/attendance-records",
+    icon: Radar,
+  },
+  {
+    name: "Cell Attendance Statistics",
+    href: "/attendance/cell-member-stats",
+    icon: Radar,
+  },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
 ];
@@ -38,11 +63,14 @@ const ZoneLeaderItems = [
 ];
 
 const FellowshipLeaderItems = [
+  { name: "Home", href: "/home", icon: Home },
   { name: "Fellowships", href: "/fellowships", icon: Church },
   { name: "Cells", href: "/cells", icon: Radar },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
 ];
+
+const MemberItems = [{ name: "Logout", href: "/logout", icon: ArrowLeftIcon },];
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
@@ -73,17 +101,25 @@ export default function Sidebar() {
   );
 }
 
-function SidebarContent({ pathname, role }: { pathname: string; role?: string }) {
+function SidebarContent({
+  pathname,
+  role,
+}: {
+  pathname: string;
+  role?: string;
+}) {
   const getSidebarItems = () => {
     switch (role) {
-      case 'ADMIN':
+      case "ADMIN":
         return AdminItems;
-      case 'CELL_LEADER':
+      case "CELL_LEADER":
         return CellLeaderItems;
-      case 'ZONE_LEADER':
+      case "ZONE_LEADER":
         return ZoneLeaderItems;
-      case 'FELLOWSHIP_LEADER':
+      case "FELLOWSHIP_LEADER":
         return FellowshipLeaderItems;
+      case "MEMBER":
+        return MemberItems;
       default:
         return [];
     }
@@ -120,4 +156,3 @@ function SidebarContent({ pathname, role }: { pathname: string; role?: string })
     </div>
   );
 }
-

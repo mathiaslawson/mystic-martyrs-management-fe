@@ -42,6 +42,27 @@ export const getAllFellowships = actionClient.action(async () => {
   return await response.json();
 });
 
+
+export const getDashItems = actionClient.action(async () => {
+  const authHeader = await getAuthHeader();
+
+  const response = await fetch(
+    `https://mystic-be.vercel.app/api/v1/users/dashboard`,
+    {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Authorization: authHeader,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  console.log(response, "this is thre respon dat");
+
+  return await response.json();
+});
+
 // Get Fellowship by ID
 export const getFellowshipByID = actionClient
   .schema(FellowshipByID, {

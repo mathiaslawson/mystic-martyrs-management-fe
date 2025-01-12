@@ -61,29 +61,7 @@ function AddCellModal() {
     executeGetZones();
   }, [isOpen, executeGetCells, executeGetFellowships]);
 
-  const roleOptions: Options[] = [
-    {
-      value: "MEMBER",
-      label: "Member",
-    },
-    {
-      value: "ZONE_LEADER",
-      label: "Zone Leader",
-    },
-    {
-      value: "CELL_LEADER",
-      label: "Cell Leader",
-    },
-    {
-      value: "FELLOWSHIP_LEADER",
-      label: "Fellowship Leader",
-    },
-    {
-      value: "ADMIN",
-      label: "Admin",
-    },
-  ];
-
+ 
   useEffect(() => {
     // fellowship
     if (fellowshipsResult?.data) {
@@ -118,6 +96,72 @@ function AddCellModal() {
   }, [fellowshipsResult, cellResult, zoneResult]);
 
   const { me } = useAuthMemberStore();
+
+
+   const roleOptions: Options[] = [
+    {
+      value: "MEMBER",
+      label: "Member",
+    },
+    {
+      value: "ZONE_LEADER",
+      label: "Zone Leader",
+    },
+    {
+      value: "CELL_LEADER",
+      label: "Cell Leader",
+    },
+    {
+      value: "FELLOWSHIP_LEADER",
+      label: "Fellowship Leader",
+    },
+    {
+      value: "ADMIN",
+      label: "Admin",
+    },
+  ];
+
+  type Role = "MEMBER" | "ZONE_LEADER" | "CELL_LEADER" | "FELLOWSHIP_LEADER" | "ADMIN";
+
+
+
+  const getRoleOptions = (userRole: Role): Options[] => {
+  switch (userRole) {
+    case "ADMIN":
+      return roleOptions;
+    
+    case "ZONE_LEADER":
+      return roleOptions.filter(
+        option => 
+          // option.value === "ZONE_LEADER" || 
+          option.value === "FELLOWSHIP_LEADER"
+      );
+    
+    case "CELL_LEADER":
+      return roleOptions.filter(
+        option => 
+          option.value === "CELL_LEADER" || 
+          option.value === "MEMBER"
+      );
+    
+    case "FELLOWSHIP_LEADER":
+      return roleOptions.filter(
+        option => 
+          option.value === "CELL_LEADER"
+      );
+    
+    case "MEMBER":
+      return roleOptions.filter(option => option.value === "MEMBER");
+    
+    default:
+      return [];
+  }
+};
+const userRole = me?.data?.member?.role as Role
+
+const availableOptions = getRoleOptions(userRole);
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -167,7 +211,7 @@ function AddCellModal() {
           <Label htmlFor="role_id">Role</Label>
           <Select
             id="role_id"
-            options={roleOptions}
+            options={availableOptions}
             value={selectedRole}
             onChange={(newValue) => {
               setSelectedRole(newValue as Options);

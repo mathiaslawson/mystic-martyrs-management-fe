@@ -24,7 +24,6 @@ import {
   MapPin,
   ArrowLeft,
   Edit,
-  Trash2,
   Loader,
   RefreshCw,
 } from "lucide-react";
@@ -263,9 +262,9 @@ const ZoneDetail = ({ data }: { data: ZoneData }) => {
             </Dialog>
             <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
               <DialogTrigger asChild>
-                <Button className="text-black">
+                {/* <Button className="text-black">
                   <Trash2 className="mr-2 h-4" /> Delete
-                </Button>
+                </Button> */}
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>

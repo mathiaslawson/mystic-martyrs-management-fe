@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
-import { RefreshCw } from "lucide-react"
+import { Loader, RefreshCw } from "lucide-react"
 import {
   Table,
   TableBody,
@@ -94,7 +94,7 @@ export function AttendanceTable() {
     return (
       <div className="h-[400px] w-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-2">
-          <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader className="h-8 w-8 animate-spin text-muted-foreground" />
           <p className="text-sm text-muted-foreground">Loading attendance records...</p>
         </div>
       </div>
@@ -160,7 +160,7 @@ export function AttendanceTable() {
                 <TableCell>{`${record.member.firstname} ${record.member.lastname}`}</TableCell>
                 <TableCell>{record.cell.cell_name}</TableCell>
                 <TableCell>
-                  <Badge variant={record.is_present ? "default" : "secondary"}>
+                  <Badge variant={record.is_present ? "default" : "secondary"} className={`${record.is_present ? "bg-green-200 text-green-700" : "bg-red-200 text-red-700"}`}>
                     {record.is_present ? "Present" : "Absent"}
                   </Badge>
                 </TableCell>

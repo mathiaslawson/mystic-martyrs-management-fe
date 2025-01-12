@@ -58,7 +58,7 @@ export function withAuth<T extends object>(
     }
 
     if (accountData?.serverError) {
-      return null; // We'll redirect in the useEffect
+      return null; 
     }
 
     return me ? <WrappedComponent {...props} /> : null;

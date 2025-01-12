@@ -59,7 +59,7 @@ function Home() {
               <Loader className="h-8 w-8 animate-spin text-green-600" />
             </div>
           ) : cells && cells.data ? (
-              cells?.data?.data?.map((cell : { cell_id: number, cell_name: string, cells: [] }) => (
+              cells?.data?.data?.map((cell : { cell_id: number, cell_name: string, cells: [], members: [] }) => (
               
               <Link href={`/cells/${cell.cell_id}`} key={cell.cell_id}>
                 <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
@@ -75,7 +75,7 @@ function Home() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2 text-muted-foreground">
                     <User size={16} />
-                          <span>{cell?.cells?.length}{ " " }Members</span>
+                          <span>{cell?.members?.length}{ " " }Members</span>
                     </div>
                      <ChevronRight className="text-primary transition-transform group-hover:translate-x-1" />
                   </div>

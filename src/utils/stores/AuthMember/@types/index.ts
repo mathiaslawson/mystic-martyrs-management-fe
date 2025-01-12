@@ -14,6 +14,7 @@ export  interface AuthMember {
       | "FELLOWSHIP_LEADER"
       | "CELL_LEADER"
       | "ZONE_LEADER";
+
     is_active: boolean;
     created_at: string;
     updated_at: string;
@@ -38,6 +39,21 @@ export  interface AuthMember {
       address: string;
       created_at: string;
       updated_at: string;
+      cell: {
+        cell_name: string;
+        fellowship_id: string;
+        cell_id: string;
+      };
+      zone: {
+        zone_name: string;
+        fellowship_id: string;
+        zone_id: string;
+      };
+      fellowship: {
+        fellowship_name: string;
+        fellowship_id: string;
+
+      };
     };
   };
 };
