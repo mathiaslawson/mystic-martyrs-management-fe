@@ -70,14 +70,14 @@ function Home() {
                   </TableHeader>
                   <TableBody>
                 {
-                 members?.data?.data?.map((member:{firstname:string,lastname:string, email:string, role:string}) => (
+                 members?.data?.data?.map((member:{firstname:string,lastname:string, email:string, role:string, zone:string, fellowship:string, cell:string}) => (
                   <TableRow key={member.email}>
                     <TableCell>{`${member.firstname} ${member.lastname}`}</TableCell>
                     <TableCell>{member.email}</TableCell>
                     <TableCell>{member.role}</TableCell>
-                    <TableCell>Zone</TableCell>
-                    <TableCell>Fellowship</TableCell>
-                    <TableCell>Cell</TableCell>
+                    <TableCell>Test Zone</TableCell>
+                    <TableCell>Test Fellowship </TableCell>
+                    <TableCell>Test Cell</TableCell>
                   </TableRow>
                 ))
               }
