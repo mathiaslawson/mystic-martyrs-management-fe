@@ -22,6 +22,7 @@ const AdminItems = [
   { name: "Fellowships", href: "/fellowships", icon: Church },
   { name: "Zones", href: "/zones", icon: Navigation },
   { name: "Cells", href: "/cells", icon: Radar },
+  { name: "Members", href: "/members", icon: Radar },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
 ];

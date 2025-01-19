@@ -62,7 +62,8 @@ export const generateInviteCode = actionClient
   });
 
 export const getAllMembersAction = actionClient.action(async () => {
-  const token = getServerSideCookie({ cookieName: "access_token" });
+  const token = await getServerSideCookie({ cookieName: "access_token" });
+
 
   if (!token) {
     throw new Error("No token found. Please log in again.");
@@ -70,11 +71,11 @@ export const getAllMembersAction = actionClient.action(async () => {
 
 
   const response = await fetch(
-    `https://churchbackend-management.onrender.com/api/v1/users`,
+    `https://mystic-be.vercel.app/api/v1/users`,
     {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${document.cookie.split("=")[1]}`,
+        Authorization: `Bearer ${token.cookie}`,
         "Content-Type": "application/json",
       },
     }
