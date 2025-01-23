@@ -1,26 +1,28 @@
 "use client";
 
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
+
 export default function AuthPage() {
+ 
   const [isLoading, setIsLoading] = useState(false);
 
-  // Function to redirect to the OAuth endpoint
-  const handleLogin = () => {
-    setIsLoading(true);
-    try {
-      // Redirect to OAuth authentication endpoint
-      window.location.href = "https://mystic-be.vercel.app/api/v1/auth/invite/04027a3d-ba5e-4c40-91e5-58f651cedc5d";
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.error("Failed to redirect for login. Please try again later.");
-    } finally {
-      setIsLoading(false);
-    }
 
+  const handleLogin = async () => {
+    setIsLoading(true);
+  try {
+    //Redirect to OAuth authentication endpoint
+    window.location.href="https://mystic-be.vercel.app//api/v1/auth/invite";
+  } catch (error) {
+    
+  console.error("Login error:",error);
+    toast.error("Failed to redirect for login. Please try again")
+}
+finally{
+  setIsLoading(false)
+}
   };
 
   return (
@@ -33,15 +35,13 @@ export default function AuthPage() {
             <Button
               className="bg-purple-600 hover:bg-purple-800 text-white md:w-96 text-center px-10 py-4 my-3"
               onClick={handleLogin}
+              disabled={isLoading}
             >
               {isLoading ? <span className="loader"></span> : "Log In"}
             </Button>
           </div>
-
         </div>
       </div>
     </div>
   );
-
 }
-
