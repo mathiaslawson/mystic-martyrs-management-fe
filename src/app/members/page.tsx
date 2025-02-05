@@ -78,6 +78,12 @@ function Home() {
                     <TableCell>Test Zone</TableCell>
                     <TableCell>Test Fellowship </TableCell>
                     <TableCell>Test Cell</TableCell>
+                    <TableCell>
+                      <button>
+                        Transfer
+                        </button>
+                    </TableCell>
+
                   </TableRow>
                 ))
               }
