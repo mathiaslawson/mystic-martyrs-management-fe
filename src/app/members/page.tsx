@@ -79,7 +79,7 @@ function Home() {
                     <TableCell>Test Fellowship </TableCell>
                     <TableCell>Test Cell</TableCell>
                     <TableCell>
-                      <button>
+                      <button className="bg-purple-500 text-white hover:bg-purple-900 rounded-lg px-4 py-2">
                         Transfer
                         </button>
                     </TableCell>
