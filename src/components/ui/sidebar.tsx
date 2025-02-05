@@ -56,7 +56,7 @@ const FellowshipLeaderItems = [
   { name: "Fellowships", href: "/fellowships", icon: Church },
   { name: "Cells", href: "/cells", icon: Radar },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
-  { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
+  { name: "Logout", href: "/auth", icon: ArrowLeftIcon },
 ];
 
 const MemberItems = [{ name: "Logout", href: "/logout", icon: ArrowLeftIcon }];
