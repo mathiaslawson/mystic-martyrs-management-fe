@@ -39,7 +39,7 @@ export const generateInviteCode = actionClient
   .action(async ({ parsedInput: { fellowshipId, zoneId, cellId, role , member_id} }) => {
     const token = await getServerSideCookie({ cookieName: "access_token" });
 
-    const response = await fetch(`${baseUrl}invitations/generate`, {
+    const response = await fetch(`${baseUrl} invitations/generate`, {
       method: "POST",
       credentials: "include",
       headers: {

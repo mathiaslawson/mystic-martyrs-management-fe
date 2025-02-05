@@ -223,7 +223,7 @@ const availableOptions = getRoleOptions(userRole);
           />
         </div>
 
-        {selectedRole?.value === "CELL_LEADER" ? (
+        {selectedRole?.value === "CELL_LEADER"  ? (
           <>
             <div>
               <Label htmlFor="fellowship_id">Cell Leader</Label>
@@ -258,6 +258,23 @@ const availableOptions = getRoleOptions(userRole);
                 isLoading={getFellowshipsStatus === "executing"}
                 isDisabled={getFellowshipsStatus === "executing"}
               />
+            </div>
+            <div>
+              <Label htmlFor="fellowship_id">Cell Leader</Label>
+              <Select
+                id="cell_id"
+                options={cellOptions}
+                value={selectedCell}
+                onChange={(newValue) => setSelectedCell(newValue as Options)}
+                placeholder="Select Cell"
+                isLoading={getCellStatus === "executing"}
+                isDisabled={getCellStatus === "executing"}
+              />
+            </div>
+            <div className="mb-10 mt-10">
+              <b>Note:</b> When this link is generated, individual who use it
+              would be able to gain Adminstrative Cell access to the associate
+              zone selected.
             </div>
             <div className="mb-10 mt-10">
               <b>Note:</b> When this link is generated, individual who use it
