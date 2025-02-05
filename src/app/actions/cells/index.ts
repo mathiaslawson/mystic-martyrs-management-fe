@@ -166,10 +166,4 @@ export const getCellLeaders = actionClient.action(async () => {
 });
 
 
-// //get cell by zone ID
-// export const getCellByZoneId = actionClient.action(async()=>
-// {
-//   const response = await fetch(
-//     ""
-//   )
-// })
+//get cell by zone ID
