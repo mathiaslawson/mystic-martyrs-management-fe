@@ -89,3 +89,20 @@ export const getAllMembersAction = actionClient.action(async () => {
 
   return response.json();
 });
+
+// export const loginAction = actionClient.action(async () => {
+//   try {
+//     const response = await fetch("https://mystic-be.vercel.app//api/v1/auth/invite", {
+//       method: "GET",
+//     });
+
+//     if (!response.ok) {
+//       throw new Error("Failed to log in");
+//     }
+
+//     // return response.text();
+//   } catch (error) {
+//     console.error("Login error:", error);
+//     throw error;
+//   }
+// });

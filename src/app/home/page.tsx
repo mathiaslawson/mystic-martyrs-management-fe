@@ -75,26 +75,38 @@ function Home() {
     count: number;
     color: string;
   }) => (
-    <div
-      className={`p-4 mt-10 rounded-md bg-neutral-100 shadow-lg border border-l border-gradient-to-r from-${color}-500 to-${color}-700`}
-    >
-      <div className="flex items-center justify-between h-[20svh]">
-        <div className="flex items-center space-x-4 text-black">
-          <Icon className="h-6 w-6" />
-          <div>
-            <h2 className="xl:text-3xl text-2xl font-bold">{title}</h2>
-            {/* <Button className="bg-purple-600 text-white text-sm font-Poppins py-2 px-6">
-              See All
-            </Button> */}
-          </div>
-        </div>
-        <p className="text-purple-900 font-extrabold text-6xl mx-10">{count}</p>
-      </div>
-      <div
-        className={`border-${color}-600 mt-10 bg-gradient-to-r from-${color}-500 to-${color}-700 shadow-lg w-full h-2 rounded-full`}
-      ></div>
-    </div>
-  );
+    // <div
+    //   className={`w-auto h-54 p-3 rounded-md bg-neutral-100 shadow-lg`}
+    // >
+    //   <div className="flex flex-col  items-start justify-between h-[20svh]">
+    //     <div className="w-full flex justify-between items-center  text-black">
+    //     <p className="text-purple-900 font-extrabold font-Poppins text-6xl">{count}</p>
+    //         {/* <Button className="bg-purple-600 text-white text-sm font-Poppins py-2 px-6">
+    //           See All
+    //         </Button> */}
+    //       <Icon className="h-6 w-6" />
+    //     </div>
+    //     <h2 className="text-2xl font-bold">{title}</h2>
+        
+    //   </div>
+    //   <div
+    //     className={`border-${color}-600 mt-10 bg-gradient-to-r from-${color}-500 to-${color}-700 shadow-lg w-full h-1 rounded-full`}
+    //   ></div>
+    // </div>
+    <div className="p-5 bg-gray-100 font-Poppins rounded shadow-sm">
+                <div className="flex items-center space-x-4">
+                    <div>
+                        <div className={`flex items-center justify-center w-12 h-12 rounded-full bg-${color}-50 text-${color}-400`}>
+                        <Icon className="h-[32px] w-[32px]" />
+                        </div>
+                    </div>
+                    <div>
+                        <div className="text-gray-400">{title}</div>
+                        <div className="text-2xl font-bold text-gray-900">{count}</div>
+                    </div>
+                </div>
+            </div>
+      );
 
   return (
     <>
@@ -156,7 +168,7 @@ function Home() {
                    </div>
                   ) : (
                     <>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         {shouldShowCard("zones") && (
                           <DashboardCard
                             title="Zones"
