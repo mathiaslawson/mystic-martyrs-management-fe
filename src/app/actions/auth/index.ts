@@ -81,6 +81,8 @@ export const getAllMembersAction = actionClient.action(async () => {
     }
   );
 
+  console.log(response, 'za members!')
+
   if (!response.ok) {
 
     const errorData = await response.json();
