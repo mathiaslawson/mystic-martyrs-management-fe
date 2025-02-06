@@ -5,8 +5,7 @@ import {z} from "zod";
 export const CreateTransfer = z.object({
             member_id:z.string(),
             new_cell_id:z.string(),
-            new_status:z.string(),
-            remarks:z.enum(
+            new_status:z.enum(
                 [
                     "ACTIVE",
                     "INACTIVE" ,
@@ -14,6 +13,7 @@ export const CreateTransfer = z.object({
                     "LEFT"
                               ]
             ),
+            remarks:z.string(),
     
 })
 

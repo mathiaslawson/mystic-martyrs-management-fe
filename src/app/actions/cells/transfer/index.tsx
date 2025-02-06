@@ -16,30 +16,39 @@ const token =  getServerSideCookie({cookieName: "access_token"});
 export const transferMember = actionClient.schema(
     CreateTransfer,
     {
-        handleValidationErrorsShape:(ve)=>
-            flattenValidationErrors(ve).fieldErrors,
+      handleValidationErrorsShape: (ve) => flattenValidationErrors(ve).fieldErrors,
     }
-).action(async({parsedInput : {member_id,new_cell_id,new_status,remarks}}) =>
-{
-    const response = await fetch(`${baseUrl}cells`,
-        {
-            method: "POST",
-           headers:{
-            Authorization : `Bearer ${(await token).cookie}`
-           },
-           body:JSON.stringify({
-            member_id,
-            new_cell_id,
-            new_status,
-            remarks,
-        })
-        }
-    );
-
-    console.log(response, "This is the transfer data")
-    
-})
-
+  ).action(async ({ parsedInput: { member_id, new_cell_id, new_status, remarks } }) => {
+    try {
+      const response = await fetch(`${baseUrl}api/v1/cells/transfer/create-transfer`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${(await token).cookie}`,
+          "Content-Type": "application/json", // Ensure the backend knows the request body is JSON
+        },
+        body: JSON.stringify({
+          member_id,
+          new_cell_id,
+          new_status,
+          remarks,
+        }),
+      });
+  
+      // Parse the response body
+      const data = await response.json();
+      console.log("API Response:", data);
+  
+      // Check if the response indicates success
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to transfer member");
+      }
+  
+      return data; // Return the response data for further handling
+    } catch (error) {
+      console.error("API Error:", error);
+      throw error; // Re-throw the error to be handled by the caller
+    }
+  });
 
 export const getTransferHistory = actionClient.schema(
 getTransferHistoryTypes,
