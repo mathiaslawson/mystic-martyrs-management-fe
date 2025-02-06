@@ -4,6 +4,7 @@ import { withAuth } from "@/components/hoc/withAuth"
 import { useAction } from "next-safe-action/hooks"
 import { useEffect } from "react"
 import Image from "next/image"
+import TransferModal from "@/app/members/TransferModal"
 
 // import {  Loader, Mail, RocketIcon, User } from "lucide-react"
 import {  Loader } from "lucide-react"
@@ -12,8 +13,10 @@ import {Table, TableBody, TableCell, TableHead, TableHeader,TableRow} from "@/co
 
 import { getAllMembersAction } from "../actions/auth"
 
+
 function Home() {
   const { execute: getMembers, result: members, status } = useAction(getAllMembersAction)
+
 
   useEffect(() => {
     getMembers()
@@ -69,24 +72,34 @@ function Home() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                {
-                 members?.data?.data?.map((member:{firstname:string,lastname:string, email:string, role:string, zone:string, fellowship:string, cell:string}) => (
-                  <TableRow key={member.email}>
-                    <TableCell>{`${member.firstname} ${member.lastname}`}</TableCell>
-                    <TableCell>{member.email}</TableCell>
-                    <TableCell>{member.role}</TableCell>
-                    <TableCell>Test Zone</TableCell>
-                    <TableCell>Test Fellowship </TableCell>
-                    <TableCell>Test Cell</TableCell>
-                    <TableCell>
-                      <button>
-                        Transfer
-                        </button>
-                    </TableCell>
-
-                  </TableRow>
-                ))
-              }
+{
+ members?.data?.data?.map((member:{
+   firstname:string,
+   lastname:string, 
+   email:string, 
+   role:string, 
+   zone:string, 
+   fellowship:string, 
+   cell:string,
+   member_id: string // Add this field
+}) => (
+  <TableRow key={member.email}>
+    <TableCell>{`${member.firstname} ${member.lastname}`}</TableCell>
+    <TableCell>{member.email}</TableCell>
+    <TableCell>{member.role}</TableCell>
+    <TableCell>Test Zone</TableCell>
+    <TableCell>Test Fellowship </TableCell>
+    <TableCell>Test Cell</TableCell>
+    <TableCell>
+      <TransferModal 
+        member_id={member.member_id} 
+        member_name={`${member.firstname} ${member.lastname}`} 
+        getMembers = {getMembers}
+      />
+    </TableCell>
+  </TableRow>
+))
+}
                   </TableBody>
                 </Table>
                
