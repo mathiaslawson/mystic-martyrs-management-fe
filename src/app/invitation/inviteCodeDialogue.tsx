@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from "react";
 import {
   Dialog,
@@ -22,25 +23,18 @@ export default function InviteCodeDialog({
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
-    const inviteLink = genRes?.inviteLink;
-    console.log("init", inviteLink);
-
-    if (genStat === "hasSucceeded" && genRes) {
-      console.log(genRes, "okay okay");
-      const inviteLink = genRes?.inviteLink;
-      const match = inviteLink?.match(/inviteCode=([\w-]+)/);
-
-      const extractedCode = match ? match[1] : null;
-
-      if (extractedCode) {
-        console.log("Extracted UUID:", extractedCode);
-        setInviteCode(`https://mystic-be.vercel.app/api/v1/auth/invite/${extractedCode}`);
-        setIsDialogOpen(true);
-      } else {
-        console.warn("Invite code not found in the URL.");
+      if (genStat === "hasSucceeded" && genRes?.inviteLink) {
+        const match = genRes.inviteLink.match(/\/invite\/([\w-]+)/);
+        const extractedCode = match ? match[1] : null;
+    
+        if (extractedCode) {
+          setInviteCode(`https://mystic-be.vercel.app/api/v1/auth/invite/${extractedCode}`);
+          setIsDialogOpen(true);
+        } else {
+          console.warn("Invite code not found in URL:", genRes.inviteLink);
+        }
       }
-    }
-  }, [genRes, genStat]);
+    }, [genRes, genStat]);
 
   const handleCopy = () => {
     if (inviteCode) {

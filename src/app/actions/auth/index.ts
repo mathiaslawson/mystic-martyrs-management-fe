@@ -36,7 +36,7 @@ export const generateInviteCode = actionClient
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async ({ parsedInput: { fellowshipId, zoneId, cellId, role , member_id} }) => {
+  .action(async ({ parsedInput: {  fellowshipId,zoneId, cellId, role , member_id} }) => {
     const token = await getServerSideCookie({ cookieName: "access_token" });
 
     const response = await fetch(`${baseUrl} invitations/generate`, {
