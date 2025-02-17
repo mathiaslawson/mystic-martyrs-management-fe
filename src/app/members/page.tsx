@@ -23,6 +23,9 @@ function Home() {
   }, [getMembers])
 
 
+  if(members){
+    console.log(members)
+  }
 
 
   return (
@@ -73,27 +76,29 @@ function Home() {
                   </TableHeader>
                   <TableBody>
 {
- members?.data?.data?.map((member:{
+ members.data?.data?.map((cell_member:{
    firstname:string,
    lastname:string, 
    email:string, 
    role:string, 
    zone:string, 
    fellowship:string, 
-   cell:string,
-   member_id: string // Add this field
+   cell:{
+    cell_name: string
+   },
+   member_id: string 
 }) => (
-  <TableRow key={member.email}>
-    <TableCell>{`${member.firstname} ${member.lastname}`}</TableCell>
-    <TableCell>{member.email}</TableCell>
-    <TableCell>{member.role}</TableCell>
+  <TableRow key={cell_member.email}>
+    <TableCell>{`${cell_member.firstname} ${cell_member.lastname}`}</TableCell>
+    <TableCell>{cell_member.email}</TableCell>
+    <TableCell>{cell_member.role}</TableCell>
     <TableCell>Test Zone</TableCell>
     <TableCell>Test Fellowship </TableCell>
-    <TableCell>Test Cell</TableCell>
+    <TableCell>{cell_member?.cell?.cell_name}</TableCell>
     <TableCell>
       <TransferModal 
-        member_id={member.member_id} 
-        member_name={`${member.firstname} ${member.lastname}`} 
+        member_id={cell_member.member_id} 
+        member_name={`${cell_member.firstname} ${cell_member.lastname}`} 
         getMembers = {getMembers}
       />
     </TableCell>

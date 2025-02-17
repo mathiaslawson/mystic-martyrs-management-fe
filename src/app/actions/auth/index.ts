@@ -36,7 +36,7 @@ export const generateInviteCode = actionClient
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async ({ parsedInput: { fellowshipId, zoneId, cellId, role , member_id} }) => {
+  .action(async ({ parsedInput: {  fellowshipId,zoneId, cellId, role , member_id} }) => {
     const token = await getServerSideCookie({ cookieName: "access_token" });
 
     const response = await fetch(`${baseUrl} invitations/generate`, {
@@ -80,6 +80,8 @@ export const getAllMembersAction = actionClient.action(async () => {
       },
     }
   );
+
+  console.log(response, 'za members!')
 
   if (!response.ok) {
 
