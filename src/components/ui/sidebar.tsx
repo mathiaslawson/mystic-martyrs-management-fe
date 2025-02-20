@@ -14,6 +14,7 @@ import {
   Radar,
   Navigation,
   UserRoundPlus,
+  BookOpenCheck
 } from "lucide-react";
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 
@@ -24,6 +25,7 @@ const AdminItems = [
   { name: "Cells", href: "/cells", icon: Radar },
   { name: "Members", href: "/members", icon: Radar },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
+  { name: "Examinations", href: "/examinations", icon: BookOpenCheck },
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
 ];
 
