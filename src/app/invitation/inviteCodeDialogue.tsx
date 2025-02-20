@@ -23,18 +23,20 @@ export default function InviteCodeDialog({
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
-      if (genStat === "hasSucceeded" && genRes?.inviteLink) {
-        const match = genRes.inviteLink.match(/\/invite\/([\w-]+)/);
-        const extractedCode = match ? match[1] : null;
-    
-        if (extractedCode) {
-          setInviteCode(`https://mystic-be.vercel.app/api/v1/auth/invite/${extractedCode}`);
-          setIsDialogOpen(true);
-        } else {
-          console.warn("Invite code not found in URL:", genRes.inviteLink);
-        }
+    if (genStat === "hasSucceeded" && genRes?.inviteLink) {
+      // Extract the invite code from the query parameter
+      const match = genRes.inviteLink.match(/inviteCode=([\w-]+)/);
+      const extractedCode = match ? match[1] : null;
+  
+      if (extractedCode) {
+        // Construct the full invite URL
+        setInviteCode(`https://mystic-be.vercel.app/api/v1/auth/invite/${extractedCode}`);
+        setIsDialogOpen(true);
+      } else {
+        console.warn("Invite code not found in URL:", genRes.inviteLink);
       }
-    }, [genRes, genStat]);
+    }
+  }, [genRes, genStat]);
 
   const handleCopy = () => {
     if (inviteCode) {

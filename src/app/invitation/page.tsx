@@ -15,8 +15,7 @@ import InviteCodeDialog from "./inviteCodeDialogue";
 import { Label } from "@/components/ui/label";
 
 // 
-
-function AddCellModal() {
+export default  function AddCellModal() {
   const [isOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState<RoleOptions | null>(null);
   const [cellOptions, setCellOptions] = useState<Options[]>([]);
@@ -87,14 +86,13 @@ function AddCellModal() {
     }
 
     // Extract fellowshipId and zoneId directly from the selected cell
-    const fellowshipId = selectedCell.fellowship_id;
-    const zoneId = selectedCell.zone_id;
+    const fellowship_id = selectedCell.fellowship_id;
+    const zone_id = selectedCell.zone_id;
 
     executeGen({
-      cellId: selectedCell.value,
+      cell_id: selectedCell.value,
       role: selectedRole.value,
-      fellowshipId,
-      zoneId,
+      fellowship_id,
       member_id: member_id as string,
     });
   };
