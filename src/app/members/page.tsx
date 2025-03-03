@@ -12,6 +12,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader,TableRow} from "@/co
 
 
 import { getAllMembersAction } from "../actions/auth"
+import LayoutContent from "../LayoutContent"
 
 
 function Home() {
@@ -29,6 +30,7 @@ function Home() {
 
 
   return (
+    <LayoutContent>
     <div className="xl:mt-[-1.6rem] mt-10">
       <div className="flex flex-col">
         <div className="flex h-5 items-center space-x-4 text-sm"></div> 
@@ -119,6 +121,7 @@ function Home() {
         </div>
       </div>
     </div>
+    </LayoutContent>
   )
 }
 

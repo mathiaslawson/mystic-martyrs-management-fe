@@ -6,9 +6,6 @@ import { Loader } from "lucide-react";
 import Select from "react-select";
 import { getAllCells } from "../actions/cells";
 import { Options, RoleOptions } from "./types";
-import { getAllFellowships } from "../actions/fellowships";
-import { withAuth } from "@/components/hoc/withAuth";
-import { getAllZones } from "../actions/zones";
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 import { generateInviteCode } from "../actions/auth";
 import InviteCodeDialog from "./inviteCodeDialogue";
@@ -16,7 +13,7 @@ import { Label } from "@/components/ui/label";
 
 // 
 export default  function AddCellModal() {
-  const [isOpen] = useState(false);
+  // const [isOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState<RoleOptions | null>(null);
   const [cellOptions, setCellOptions] = useState<Options[]>([]);
   const [selectedCell, setSelectedCell] = useState<Options | null>(null);
@@ -76,7 +73,7 @@ export default  function AddCellModal() {
     },
   ];
 
-  type Role = "MEMBER" | "ZONE_LEADER" | "CELL_LEADER" | "FELLOWSHIP_LEADER" | "ADMIN";
+  // type Role = "MEMBER" | "ZONE_LEADER" | "CELL_LEADER" | "FELLOWSHIP_LEADER" | "ADMIN";
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -87,7 +84,7 @@ export default  function AddCellModal() {
 
     // Extract fellowshipId and zoneId directly from the selected cell
     const fellowship_id = selectedCell.fellowship_id;
-    const zone_id = selectedCell.zone_id;
+    // const zone_id = selectedCell.zone_id;
 
     executeGen({
       cell_id: selectedCell.value,

@@ -9,8 +9,9 @@ import Select from "react-select";
 import { getAllCells } from "../actions/cells";
 import { Options } from "../invitation/types";
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
-import { createExams } from "../actions/examinations";
+
 import { useAction } from "next-safe-action/hooks";
+import { createExamination } from "../actions/cells/examinations";
 
 const Page = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -29,8 +30,7 @@ const Page = () => {
   const {
     execute: executeCreateExams,
     status: getCreateExamStatus,
-    result: createExamRes,
-  } = useAction(createExams);
+  } = useAction(createExamination);
 
   // Fetch cells on mount
   useEffect(() => {
@@ -71,10 +71,10 @@ const Page = () => {
 
     // Submit the form
     executeCreateExams({
-      cell_id: selectedCell?.value || null, // Use null if no cell is selected
+      cell_id: selectedCell?.value || null, 
       title,
       date,
-      member_id
+      created_by_id: member_id
   });
   }
 

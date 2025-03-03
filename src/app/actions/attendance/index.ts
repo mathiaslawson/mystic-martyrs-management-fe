@@ -8,7 +8,7 @@ import {
   MemberAbscence,
   RecordAttendance,
   SingleMemberStat,
-} from "@/schemas/attendance";
+} from "@/schemas/cells/attendance";
 import { flattenValidationErrors } from "next-safe-action";
 
 const getAuthHeader = async () => {

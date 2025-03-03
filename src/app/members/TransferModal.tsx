@@ -16,7 +16,7 @@ import { getAllCells } from "@/app/actions/cells";
 import Select, { SingleValue } from "react-select";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { transferMember } from "@/app/actions/cells/transfer/";
+import { transferMember } from "@/app/actions/cells/transfer";
 
 import { toast } from "sonner";
 import { status } from "./@types";
