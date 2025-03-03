@@ -36,10 +36,10 @@ export const generateInviteCode = actionClient
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async ({ parsedInput: { fellowshipId, zoneId, cellId, role , member_id} }) => {
+  .action(async ({ parsedInput: {  fellowship_id,zone_id, cell_id, role , member_id} }) => {
     const token = await getServerSideCookie({ cookieName: "access_token" });
 
-    const response = await fetch(`${baseUrl} invitations/generate`, {
+    const response = await fetch(`${baseUrl}api/v1/invitations/generate`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -47,9 +47,9 @@ export const generateInviteCode = actionClient
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        fellowshipId,
-        zoneId,
-        cellId,
+        fellowship_id,
+        zone_id,
+        cell_id,
         role,
         member_id
       }),
@@ -80,6 +80,8 @@ export const getAllMembersAction = actionClient.action(async () => {
       },
     }
   );
+
+  console.log(response, 'za members!')
 
   if (!response.ok) {
 

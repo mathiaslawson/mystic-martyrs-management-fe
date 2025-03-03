@@ -18,7 +18,7 @@ export const getAllCells = actionClient.action(async () => {
   const authHeader = await getAuthHeader();
 
   const response = await fetch(
-    `https://churchbackend-management.onrender.com/api/v1/cells`,
+    `https://mystic-be.vercel.app/api/v1/cells`,
     {
       method: "GET",
       credentials: "include",
@@ -35,7 +35,7 @@ console.log(response)
   return await response.json();
 });
 
-//getFellowship by ID
+//get cells by ID
 export const getCellsByID = actionClient
   .schema(CellByID, {
     handleValidationErrorsShape: (ve) =>
@@ -45,7 +45,7 @@ export const getCellsByID = actionClient
     const authHeader = await getAuthHeader();
 
     const response = await fetch(
-      `https://churchbackend-management.onrender.com/api/v1/cells/${id}`,
+      `https://mystic-be.vercel.app/api/v1/cells/${id}`,
       {
         method: "GET",
         credentials: "include",
@@ -69,7 +69,7 @@ export const updateCell = actionClient
     const authHeader = await getAuthHeader();
 
     const response = await fetch(
-      `https://churchbackend-management.onrender.com/api/v1/cells/${id}`,
+      `https://mystic-be.vercel.app/api/v1//cells/${id}`,
       {
         method: "PATCH",
         credentials: "include",
@@ -96,7 +96,7 @@ export const deleteCell = actionClient
     const authHeader = await getAuthHeader();
 
     const response = await fetch(
-      `https://churchbackend-management.onrender.com/api/v1/cells/${id}`,
+      `https://mystic-be.vercel.app/api/v1//cells/${id}`,
       {
         method: "DELETE",
         credentials: "include",
@@ -120,7 +120,7 @@ export const addCell = actionClient
       const authHeader = await getAuthHeader();
 
       const response = await fetch(
-        `https://churchbackend-management.onrender.com/api/v1/cells`,
+        `https://mystic-be.vercel.app/api/v1//cells`,
         {
           method: "POST",
           credentials: "include",
@@ -143,7 +143,7 @@ export const getCellLeaders = actionClient.action(async () => {
   const authHeader = await getAuthHeader();
 
   const response = await fetch(
-    `https://churchbackend-management.onrender.com/api/v1/users`,
+    `https://mystic-be.vercel.app/api/v1//users`,
     {
       method: "GET",
       credentials: "include",

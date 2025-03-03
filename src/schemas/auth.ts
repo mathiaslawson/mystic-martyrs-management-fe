@@ -20,9 +20,9 @@ export const RegisterAuthSchema = z.object({
 });
 
 export const GenerateInvitationSchema = z.object({
-  cellId: z.string().optional(),
-  fellowshipId: z.string().optional(),
-  zoneId: z.string().optional(),
+  cell_id: z.string().optional(),
+  fellowship_id: z.string().optional(),
+  zone_id: z.string().optional(),
   member_id: z.string(),
   role: z.string(),
 });

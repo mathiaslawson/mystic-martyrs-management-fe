@@ -12,6 +12,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader,TableRow} from "@/co
 
 
 import { getAllMembersAction } from "../actions/auth"
+import LayoutContent from "../LayoutContent"
 
 
 function Home() {
@@ -23,9 +24,13 @@ function Home() {
   }, [getMembers])
 
 
+  if(members){
+    console.log(members)
+  }
 
 
   return (
+    <LayoutContent>
     <div className="xl:mt-[-1.6rem] mt-10">
       <div className="flex flex-col">
         <div className="flex h-5 items-center space-x-4 text-sm"></div> 
@@ -73,27 +78,29 @@ function Home() {
                   </TableHeader>
                   <TableBody>
 {
- members?.data?.data?.map((member:{
+ members.data?.data?.map((cell_member:{
    firstname:string,
    lastname:string, 
    email:string, 
    role:string, 
    zone:string, 
    fellowship:string, 
-   cell:string,
-   member_id: string // Add this field
+   cell:{
+    cell_name: string
+   },
+   member_id: string 
 }) => (
-  <TableRow key={member.email}>
-    <TableCell>{`${member.firstname} ${member.lastname}`}</TableCell>
-    <TableCell>{member.email}</TableCell>
-    <TableCell>{member.role}</TableCell>
+  <TableRow key={cell_member.email}>
+    <TableCell>{`${cell_member.firstname} ${cell_member.lastname}`}</TableCell>
+    <TableCell>{cell_member.email}</TableCell>
+    <TableCell>{cell_member.role}</TableCell>
     <TableCell>Test Zone</TableCell>
     <TableCell>Test Fellowship </TableCell>
-    <TableCell>Test Cell</TableCell>
+    <TableCell>{cell_member?.cell?.cell_name}</TableCell>
     <TableCell>
       <TransferModal 
-        member_id={member.member_id} 
-        member_name={`${member.firstname} ${member.lastname}`} 
+        member_id={cell_member.member_id} 
+        member_name={`${cell_member.firstname} ${cell_member.lastname}`} 
         getMembers = {getMembers}
       />
     </TableCell>
@@ -114,6 +121,7 @@ function Home() {
         </div>
       </div>
     </div>
+    </LayoutContent>
   )
 }
 
