@@ -8,7 +8,7 @@ import Link from "next/link"
 import { ChevronRight, Loader, TentTree } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { AddFellowshipModal } from "./AddFellowshipModal"
-import { getAllFellowships } from "../actions/fellowships"
+import { getAllFellowships } from "../../components/@Global/actions/fellowships"
 
 function Home() {
   const { execute: getFellowships, result: fellowships, status } = useAction(getAllFellowships)

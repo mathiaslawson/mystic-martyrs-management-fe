@@ -9,8 +9,8 @@ import { Label } from '@/components/ui/label'
 import { Loader, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 import Select from 'react-select'
-import { getAllZones } from '@/app/actions/zones'
-import { addFellowship } from '../actions/fellowships'
+import { getAllZones } from '@/components/@Global/actions/zones'
+import { addFellowship } from '../../components/@Global/actions/fellowships'
 
 
 interface Zone {

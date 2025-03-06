@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { formatDate, filterByWeek, filterByMonth } from "@/lib/utils"
-import { attendanceRecords } from "@/app/actions/attendance"
+import { attendanceRecords } from "@/components/@Global/actions/attendance"
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore"
 
 type FilterType = "all" | "week" | "month"

@@ -40,7 +40,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAction } from "next-safe-action/hooks";
-import { deleteZone, getZoneByID, updateZone } from "@/app/actions/zones";
+import { deleteZone, getZoneByID, updateZone } from "@/components/@Global/actions/zones";
 import { withAuth } from "@/components/hoc/withAuth";
 import { formatDate } from "@/lib/utils";
 import { toast } from "sonner";

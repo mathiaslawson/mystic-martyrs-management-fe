@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { DatePicker } from "@/components/ui/date-picker";
 import { useAction } from "next-safe-action/hooks";
-import { getCellMembers, recordAttendance } from "@/app/actions/attendance";
+import { getCellMembers, recordAttendance } from "@/components/@Global/actions/attendance";
 import { toast } from "sonner";
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 

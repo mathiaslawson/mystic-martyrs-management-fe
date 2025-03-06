@@ -11,7 +11,7 @@ import {  Loader } from "lucide-react"
 import {Table, TableBody, TableCell, TableHead, TableHeader,TableRow} from "@/components/ui/table"
 
 
-import { getAllMembersAction } from "../actions/auth"
+import { getAllMembersAction } from "../../components/@Global/actions/auth"
 import LayoutContent from "../LayoutContent"
 
 

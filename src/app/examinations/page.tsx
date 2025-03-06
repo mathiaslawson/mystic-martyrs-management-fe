@@ -6,12 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Select from "react-select";
-import { getAllCells } from "../actions/cells";
+import { getAllCells } from "../../components/@Global/actions/cells";
 import { Options } from "../invitation/types";
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 
 import { useAction } from "next-safe-action/hooks";
-import { createExamination } from "../actions/cells/examinations";
+import { createExamination } from "../../components/@Global/actions/cells/examinations";
 
 const Page = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());

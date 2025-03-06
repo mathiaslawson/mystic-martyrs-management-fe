@@ -24,7 +24,7 @@ import { withAuth } from "@/components/hoc/withAuth"
 import { formatDate } from "@/lib/utils"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
-import { deleteCell, getCellsByID, updateCell } from "@/app/actions/cells"
+import { deleteCell, getCellsByID, updateCell } from "@/components/@Global/actions/cells"
 
 const CellDetail = ({ data }: { data: {cell_id: string, cell_name: string, cell_leader_id: string} }) => {
   const router = useRouter()

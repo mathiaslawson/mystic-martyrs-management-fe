@@ -4,10 +4,10 @@ import { useAction } from "next-safe-action/hooks";
 import { Button } from "@/components/ui/button";
 import { Loader } from "lucide-react";
 import Select from "react-select";
-import { getAllCells } from "../actions/cells";
+import { getAllCells } from "../../components/@Global/actions/cells";
 import { Options, RoleOptions } from "./types";
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
-import { generateInviteCode } from "../actions/auth";
+import { generateInviteCode } from "../../components/@Global/actions/auth";
 import InviteCodeDialog from "./inviteCodeDialogue";
 import { Label } from "@/components/ui/label";
 

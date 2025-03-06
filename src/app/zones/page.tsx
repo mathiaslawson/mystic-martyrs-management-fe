@@ -5,7 +5,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getAllZones } from "../actions/zones";
+import { getAllZones } from "../../components/@Global/actions/zones";
 import { ChevronRight, Component, Loader } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { AddZoneModal } from "./AddZoneModal";
