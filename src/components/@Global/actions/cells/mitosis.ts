@@ -14,43 +14,40 @@ const baseUrl = `https://mystic-be.vercel.app/api/v1`;
 
 const token = getServerSideCookie({ cookieName: "access_token" });
 
+const getAuthHeader = async () => {
+  const token = await getServerSideCookie({ cookieName: "access_token" });
+  console.log("this is token", token.cookie);
+  if (!token) {
+    throw new Error("User not authenticated");
+  }
+  return `Bearer ${token.cookie}`;
+};
+  
+
 export const divideCell = actionClient
   .schema(divideCellSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(
-    async ({
-      parsedInput: { cell_id, new_cell_name, reason },
-    }) => {
-      try {
-        const response = await fetch(`${baseUrl}/cells/mitosis/divide`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${(await token).cookie}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cell_id,
-            new_cell_name,
-            reason
-          }),
-        });
+  .action(async ({ parsedInput: { cell_id, new_cell_name, reason } }) => {
+    const authHeader = await getAuthHeader();
 
-        const data = await response.json();
-        console.log("API Response:", data);
+    const response = await fetch(`http://localhost:3000/api/v1/cells/mitosis/divide`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Authorization: authHeader,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cell_id,
+        new_cell_name,
+        reason,
+      }),
+    });
+    return response.json();
+  });
 
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to Divide Cell");
-        }
-
-        return data;
-      } catch (error) {
-        console.error("API Error:", error);
-        throw error; 
-      }
-    }
-  );
 
 export const getMitosisHistory = actionClient
   .schema(mitosisHistory, {

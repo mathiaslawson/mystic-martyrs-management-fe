@@ -29,7 +29,7 @@ export const getAllCells = actionClient.action(async () => {
     }
   );
 
-console.log(response)
+console.log(response, 'wemeyy')
 
 
   return await response.json();
@@ -45,7 +45,7 @@ export const getCellsByID = actionClient
     const authHeader = await getAuthHeader();
 
     const response = await fetch(
-      `https://mystic-be.vercel.app/api/v1/cells/${id}`,
+      `http://localhost:3000/api/v1/cells/${id}`,
       {
         method: "GET",
         credentials: "include",
@@ -69,7 +69,7 @@ export const updateCell = actionClient
     const authHeader = await getAuthHeader();
 
     const response = await fetch(
-      `https://mystic-be.vercel.app/api/v1//cells/${id}`,
+      `https://mystic-be.vercel.app/api/v1/cells/${id}`,
       {
         method: "PATCH",
         credentials: "include",

@@ -26,15 +26,7 @@ const AdminItems = [
   { name: "Home", href: "/home", icon: Home },
   { name: "Fellowships", href: "/fellowships", icon: Church },
   { name: "Zones", href: "/zones", icon: Navigation },
-  {
-    name: "Cells",
-    href: "/cells",
-    icon: Radar,
-    subItems: [
-      { name: "Cell Mitosis", href: "/cells/mitosis", icon: Radar },
-      { name: "Cell Management", href: "/cells", icon: Radar },
-    ],
-  },
+  { name: "Cell Management", href: "/cells", icon: Radar },
   { name: "Members", href: "/members", icon: Radar },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Examinations", href: "/examinations", icon: BookOpenCheck },
