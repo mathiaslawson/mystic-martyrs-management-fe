@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
-import { getAccountDataAction } from "@/app/actions/auth";
+import { getAccountDataAction } from "@/components/@Global/actions/auth";
 import { toast } from "sonner";
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 

@@ -12,11 +12,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAction } from "next-safe-action/hooks";
-import { getAllCells } from "@/app/actions/cells";
+import { getAllCells } from "@/components/@Global/actions/cells";
 import Select, { SingleValue } from "react-select";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { transferMember } from "@/app/actions/cells/transfer";
+import { transferMember } from "@/components/@Global/actions/cells/transfer";
 
 import { toast } from "sonner";
 import { status } from "./@types";

@@ -1,6 +1,6 @@
 "use client"
 
-import { generalCellStat } from "@/app/actions/attendance"
+import { generalCellStat } from "@/components/@Global/actions/attendance"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore"

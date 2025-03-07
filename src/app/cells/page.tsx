@@ -8,7 +8,7 @@ import Link from "next/link"
 import { ChevronRight, Loader, User } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { AddCellModal } from "./AddCellModal"
-import { getAllCells } from "../actions/cells"
+import { getAllCells } from "../../components/@Global/actions/cells"
 
 function Home() {
   const { execute: getCells, result: cells, status } = useAction(getAllCells)

@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Loader, Plus } from 'lucide-react'
 import { toast } from 'sonner'
-import { addZone } from '@/app/actions/zones'
+import { addZone } from '@/components/@Global/actions/zones'
 
 
 export function AddZoneModal({ onZoneAdded }: { onZoneAdded: () => void }) {

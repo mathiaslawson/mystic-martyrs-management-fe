@@ -9,8 +9,8 @@ import { Label } from '@/components/ui/label'
 import { Loader, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 import Select from 'react-select'
-import { addCell } from '../actions/cells'
-import { getAllFellowships } from '../actions/fellowships'
+import { addCell } from '../../components/@Global/actions/cells'
+import { getAllFellowships } from '../../components/@Global/actions/fellowships'
 
 
 interface Fellowship {

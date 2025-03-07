@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { setServerSideCookie } from "@/lib/get-cookie";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { getAccountDataAction } from "@/app/actions/auth";
-import { useUser } from "@/app/context/UserContext";
+import { getAccountDataAction } from "@/components/@Global/actions/auth";
+import { useUser } from "@/components/@Global/context/UserContext";
 import { useAction } from "next-safe-action/hooks";
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 

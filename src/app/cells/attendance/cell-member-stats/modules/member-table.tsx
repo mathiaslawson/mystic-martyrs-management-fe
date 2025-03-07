@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/card";
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 import { useAction } from "next-safe-action/hooks";
-import { getCellMembers } from "@/app/actions/attendance";
+import { getCellMembers } from "@/components/@Global/actions/attendance";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 

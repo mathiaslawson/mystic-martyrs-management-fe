@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import React, { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
   Home,
   Menu,
@@ -14,36 +14,38 @@ import {
   Radar,
   Navigation,
   UserRoundPlus,
-  BookOpenCheck
-} from "lucide-react";
-import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
+  BookOpenCheck,
+  ChevronDown,
+  ChevronRight,
+} from "lucide-react"
+import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore"
+import { cn } from "@/lib/utils"
 
+// Updated AdminItems with nested structure for submenus
 const AdminItems = [
   { name: "Home", href: "/home", icon: Home },
   { name: "Fellowships", href: "/fellowships", icon: Church },
   { name: "Zones", href: "/zones", icon: Navigation },
-  { name: "Cells", href: "/cells", icon: Radar },
+  { name: "Cell Management", href: "/cells", icon: Radar },
   { name: "Members", href: "/members", icon: Radar },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Examinations", href: "/examinations", icon: BookOpenCheck },
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
-];
+]
 
 const CellLeaderItems = [
   { name: "Home", href: "/home", icon: Home },
   {
-    name: "Attendance Records",
-    href: "/attendance/attendance-records",
+    name: "Attendance",
     icon: Radar,
-  },
-  {
-    name: "Cell Attendance Statistics",
-    href: "/attendance/cell-member-stats",
-    icon: Radar,
+    subItems: [
+      { name: "Attendance Records", href: "/attendance/attendance-records", icon: Radar },
+      { name: "Cell Attendance Statistics", href: "/attendance/cell-member-stats", icon: Radar },
+    ],
   },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
-];
+]
 
 const ZoneLeaderItems = [
   { name: "Home", href: "/home", icon: Home },
@@ -51,7 +53,7 @@ const ZoneLeaderItems = [
   { name: "Zones", href: "/zones", icon: Navigation },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
-];
+]
 
 const FellowshipLeaderItems = [
   { name: "Home", href: "/home", icon: Home },
@@ -59,81 +61,146 @@ const FellowshipLeaderItems = [
   { name: "Cells", href: "/cells", icon: Radar },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Logout", href: "/auth", icon: ArrowLeftIcon },
-];
+]
 
-const MemberItems = [{ name: "Logout", href: "/logout", icon: ArrowLeftIcon }];
+const MemberItems = [{ name: "Logout", href: "/logout", icon: ArrowLeftIcon }]
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(false);
-  const pathname = usePathname();
-  const { me, isLoading } = useAuthMemberStore(); // Assuming isLoading is available.
+  const [open, setOpen] = useState(false)
+  const pathname = usePathname()
+  const { me, isLoading } = useAuthMemberStore() // Assuming isLoading is available.
 
-  const role = me?.data?.role;
+  const role = me?.data?.role
 
   return (
     <>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            className="lg:hidden fixed left-4 top-4 z-50"
-          >
+          <Button variant="outline" size="icon" className="lg:hidden fixed left-4 top-4 z-50">
             <Menu className="h-4 w-4" />
             <span className="sr-only">Toggle Sidebar</span>
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-[240px] p-0">
-          {isLoading ? (
-            <LoadingSidebar />
-          ) : (
-            <SidebarContent pathname={pathname} role={role} />
-          )}
+          {isLoading ? <LoadingSidebar /> : <SidebarContent pathname={pathname} role={role} />}
         </SheetContent>
       </Sheet>
       <aside className="hidden lg:flex h-screen w-[240px] flex-col fixed inset-y-0">
-        {isLoading ? (
-          <LoadingSidebar />
-        ) : (
-          <SidebarContent pathname={pathname} role={role} />
-        )}
+        {isLoading ? <LoadingSidebar /> : <SidebarContent pathname={pathname} role={role} />}
       </aside>
     </>
-  );
+  )
+}
+
+// Type definition for menu items
+type MenuItem = {
+  name: string
+  href?: string
+  icon: React.ElementType
+  subItems?: MenuItem[]
+}
+
+// New component for rendering menu items with potential submenus
+function SidebarMenuItem({ item, pathname }: { item: MenuItem; pathname: string }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const hasSubItems = item.subItems && item.subItems.length > 0
+
+  // Check if current path matches this item or any of its subitems
+  const isActive =
+    pathname === item.href || (hasSubItems && item.subItems?.some((subItem) => pathname === subItem.href))
+
+  // Check if submenu should be open by default (when a subitem is active)
+  React.useEffect(() => {
+    if (hasSubItems && item.subItems?.some((subItem) => pathname === subItem.href)) {
+      setIsOpen(true)
+    }
+  }, [pathname, hasSubItems, item.subItems])
+
+  return (
+    <div>
+      {hasSubItems ? (
+        // Parent item with submenu
+        <div className="flex flex-col">
+          <Button
+            variant="ghost"
+            className={cn("justify-between w-full", isActive && !item.href ? "text-purple-700" : "text-neutral-800")}
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <div className="flex items-center">
+              <item.icon className="mr-2 h-4 w-4" />
+              {item.name}
+            </div>
+            {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </Button>
+
+          {/* Submenu items */}
+          {isOpen && (
+            <div className="ml-6 mt-1 flex flex-col gap-1 border-l pl-2">
+              {item.subItems?.map((subItem) => (
+                <Button
+                  key={subItem.name}
+                  asChild
+                  variant={pathname === subItem.href ? "destructive" : "ghost"}
+                  className={cn("justify-start", pathname === subItem.href ? "text-purple-700" : "text-neutral-800")}
+                >
+                  <Link href={subItem.href || "#"}>
+                    <subItem.icon className="mr-2 h-4 w-4" />
+                    {subItem.name}
+                  </Link>
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        // Regular menu item without submenu
+        <Button
+          asChild
+          variant={pathname === item.href ? "destructive" : "ghost"}
+          className={cn("justify-start", pathname === item.href ? "text-purple-700" : "text-neutral-800")}
+        >
+          <Link href={item.href || "#"}>
+            <item.icon className="mr-2 h-4 w-4" />
+            {item.name}
+          </Link>
+        </Button>
+      )}
+    </div>
+  )
 }
 
 function SidebarContent({
   pathname,
   role,
 }: {
-  pathname: string;
-  role?: string;
+  pathname: string
+  role?: string
 }) {
   const getSidebarItems = () => {
     switch (role) {
       case "ADMIN":
-        return AdminItems;
+        return AdminItems
       case "CELL_LEADER":
-        return CellLeaderItems;
+        return CellLeaderItems
       case "ZONE_LEADER":
-        return ZoneLeaderItems;
+        return ZoneLeaderItems
       case "FELLOWSHIP_LEADER":
-        return FellowshipLeaderItems;
+        return FellowshipLeaderItems
       case "MEMBER":
-        return MemberItems;
+        return MemberItems
       default:
-        return [];
+        return []
     }
-  };
+  }
 
-  const sidebarItems = getSidebarItems();
+  const sidebarItems = getSidebarItems()
 
   if (!role) {
     return (
       <div className="flex h-full items-center justify-center">
         <p>No role assigned. Please contact your administrator.</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -146,24 +213,12 @@ function SidebarContent({
       <ScrollArea className="flex-1">
         <nav className="flex flex-col gap-1 p-2">
           {sidebarItems.map((item) => (
-            <Button
-              key={item.name}
-              asChild
-              variant={pathname === item.href ? "destructive" : "ghost"}
-              className={`justify-start ${
-                pathname === item.href ? "text-purple-700" : "text-neutral-800"
-              }`}
-            >
-              <Link href={item.href}>
-                <item.icon className="mr-2 h-4 w-4" />
-                {item.name}
-              </Link>
-            </Button>
+            <SidebarMenuItem key={item.name} item={item} pathname={pathname} />
           ))}
         </nav>
       </ScrollArea>
     </div>
-  );
+  )
 }
 
 function LoadingSidebar() {
@@ -171,5 +226,6 @@ function LoadingSidebar() {
     <div className="flex h-full items-center justify-center">
       <p>Loading sidebar...</p>
     </div>
-  );
+  )
 }
+

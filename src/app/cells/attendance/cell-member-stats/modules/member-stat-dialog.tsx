@@ -10,7 +10,7 @@ import {
 import {
   memberAbscenceStat,
   singleMemberStats,
-} from "@/app/actions/attendance";
+} from "@/components/@Global/actions/attendance";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";

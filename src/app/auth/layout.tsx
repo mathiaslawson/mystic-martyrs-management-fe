@@ -1,5 +1,5 @@
 import React from 'react'
-import Noisebackground from "@/components/theme/Noisebackground"
+// import Noisebackground from "@/components/theme/Noisebackground"
 
 export default function AuthLayout({
   children,
@@ -8,7 +8,7 @@ export default function AuthLayout({
 }) {
   return (
     <>
-    <Noisebackground />
+    {/* <Noisebackground /> */}
      <div className="relative auth-body">
       {/* <Noisebackground /> */}
       {children}

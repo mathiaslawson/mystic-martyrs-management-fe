@@ -48,7 +48,7 @@ import {
   deleteFellowship,
   getFellowshipByID,
   updateFellowship,
-} from "@/app/actions/fellowships";
+} from "@/components/@Global/actions/fellowships";
 import { Skeleton } from "@/components/ui/skeleton";
 
 

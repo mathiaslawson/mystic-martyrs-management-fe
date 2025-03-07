@@ -15,8 +15,8 @@ import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { getDashItems } from "../actions/fellowships";
-import { getCellsByID } from "../actions/cells";
+import { getDashItems } from "../../components/@Global/actions/fellowships";
+import { getCellsByID } from "../../components/@Global/actions/cells";
 
 function Home() {
   const { me } = useAuthMemberStore();

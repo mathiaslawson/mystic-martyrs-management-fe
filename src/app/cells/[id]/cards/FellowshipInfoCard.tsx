@@ -1,0 +1,26 @@
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CellData } from "../../@types"
+
+export default function FellowshipInfoCard({ cellData }: { cellData: CellData }) {
+  return (
+    <Card className="bg-white overflow-hidden hover:shadow-lg transition-all duration-300 group lg:col-span-2">
+      <CardHeader className="text-black rounded-t-lg bg-green-100">
+        <CardTitle>Fellowship Information</CardTitle>
+        <CardDescription className="text-green-900">Details of associated fellowship</CardDescription>
+        <div className="border-green-600 mt-3 bg-gradient-to-r from-green-500 to-green-700 shadow-lg w-full h-2 rounded-full"></div>
+      </CardHeader>
+      <CardContent className="mt-4">
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <Badge variant="secondary" className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
+              {cellData?.cell?.fellowship?.fellowship_name}
+            </Badge>
+            <span className="text-sm text-gray-500">ID: {cellData?.cell?.fellowship?.fellowship_id}</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
