@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Loader } from 'lucide-react';
+import { Loader } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
@@ -12,7 +12,6 @@ import {
   updateCell,
 } from "@/components/@Global/actions/cells";
 import CellInfoCard from "./cards/CellInfoCard";
-
 
 import FellowshipInfoCard from "./cards/FellowshipInfoCard";
 import CellLeadersCard from "./cards/CellLeadersCard";
@@ -29,6 +28,8 @@ const CellDetail = ({
   data: { cell_id: string; cell_name: string; cell_leader_id: string };
 }) => {
   const router = useRouter();
+
+  const [view, setView] = useState("bio");
 
   const {
     execute: getDetails,
@@ -127,17 +128,50 @@ const CellDetail = ({
           setIsEditOpen={setIsEditOpen}
           setIsMitosisOpen={setIsMitosisOpen}
         />
-
         <h1 className="text-2xl font-bold mb-8 text-neutral-900">
           {cellData?.cell?.cell_name}
         </h1>
 
+        <div className="border border-1 border-neutral-400 mt-3 mb-10 flex flex-row gap-1 rounded-md p-1 w-max transition-all">
+          <div
+            className={`p-1 px-3 rounded-md cursor-pointer ${view === "bio" && "bg-green-600 text-white"} `}
+            onClick={() => setView("bio")}
+          >
+            Bio Data
+          </div>
+          <div
+            onClick={() => setView("mitosis")}
+            className={`p-1 px-3 rounded-md cursor-pointer ${view === "mitosis" && "bg-green-600 text-white"} `}
+          >
+            Mitosis
+          </div>
+          <div
+            onClick={() => setView("members")}
+            className={`p-1 px-3 rounded-md cursor-pointer ${view === "members" && "bg-green-600 text-white"} `}
+          >
+            Member Management
+          </div>
+        </div>
+
         <div className="grid gap-8 md:grid-cols-12 lg:grid-cols-3 mb-8">
-          <CellInfoCard cellData={cellData} />
-          <FellowshipInfoCard cellData={cellData} />
-          <CellLeadersCard cellData={cellData} />
-          <CellMembersCard cellData={cellData} />
-          <CellMitosisHistoryCard cellData={cellData} />
+          {view === "bio" ? (
+            <>
+              <CellInfoCard cellData={cellData} />
+              <FellowshipInfoCard cellData={cellData} />
+              <CellLeadersCard cellData={cellData} />
+            </>
+          ) : view === "members" ? (
+            <>
+              {" "}
+              <CellMembersCard cellData={cellData} />
+            </>
+          ) : view === "mitosis" ? (
+            <>
+              <CellMitosisHistoryCard cellData={cellData} />
+            </>
+          ) : (
+            <>{setView("bio")}</>
+          )}
         </div>
 
         <EditCellDialog
@@ -161,7 +195,6 @@ const CellDetail = ({
           isOpen={isMitosisOpen}
           setIsOpen={setIsMitosisOpen}
           cellData={cellData}
-          
         />
       </div>
     </div>
