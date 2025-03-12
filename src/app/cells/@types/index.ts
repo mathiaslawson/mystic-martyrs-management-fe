@@ -8,11 +8,11 @@ export interface Member {
   lastname: string;
   email: string;
   gender: "MALE" | "FEMALE" | "OTHER";
-  role: "ADMIN" | "MEMBER";
+  role: "ADMIN" | "MEMBER" | "CELL_LEADER" | "FELLOWSHIP_LEADER" | "ZONE_LEADER";
   birth_date: string;
   occupation: string;
   address: string;
-  status: "ACTIVE" | "INACTIVE";
+  status: "ACTIVE" | "INACTIVE" | "TRANSFERRED";
   created_at: string;
   updated_at: string;
 }
@@ -103,3 +103,13 @@ export interface MitosisCellDialogProps {
     };
   };
 }
+
+
+export type TransferHistory = {
+  id: string;
+  from_cell: string;
+  to_cell: string;
+  date: string;
+  remarks: string;
+};
+
