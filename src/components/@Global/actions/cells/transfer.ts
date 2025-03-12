@@ -9,54 +9,49 @@ import {
   TransferHistoryByMemberId,
 } from "@/schemas/cells/transfer";
 
-const baseUrl = `https://mystic-be.vercel.app/`;
+const baseUrl =
+  process.env.NODE_ENV === "development"
+    ? `http://localhost:3000/`
+    : `https://mystic-be.vercel.app/`;
 
-//Create a transfer
-const token = getServerSideCookie({ cookieName: "access_token" });
+const getAuthHeader = async () => {
+  const token = await getServerSideCookie({ cookieName: "access_token" });
+  console.log("this is token", token.cookie);
+  if (!token) {
+    throw new Error("User not authenticated");
+  }
+  return `Bearer ${token.cookie}`;
+};
 
 export const transferMember = actionClient
   .schema(CreateTransfer, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(
-    async ({
-      parsedInput: { member_id, new_cell_id, new_status, remarks },
-    }) => {
-      try {
-        const response = await fetch(
-          `${baseUrl}api/v1/cells/transfer/create-transfer`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${(await token).cookie}`,
-              "Content-Type": "application/json", // Ensure the backend knows the request body is JSON
-            },
-            body: JSON.stringify({
-              member_id,
-              new_cell_id,
-              new_status,
-              remarks,
-            }),
-          }
-        );
+  .action(async ({ parsedInput: { member_id, new_cell_id, remarks } }) => {
+    const authHeader = await getAuthHeader();
 
-        // Parse the response body
-        const data = await response.json();
-        console.log("API Response:", data);
-
-        // Check if the response indicates success
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to transfer member");
-        }
-
-        return data; // Return the response data for further handling
-      } catch (error) {
-        console.error("API Error:", error);
-        throw error; // Re-throw the error to be handled by the caller
+    const response = await fetch(
+      `${baseUrl}api/v1/cells/transfer/create-transfer`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Authorization: authHeader,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          member_id,
+          new_cell_id,
+          remarks,
+        }),
       }
-    }
-  );
+    );
+
+    console.log(response, "this is the response");
+
+    return await response.json();
+  });
 
 export const getTransferHistory = actionClient
   .schema(getTransferHistoryTypes, {
@@ -65,47 +60,69 @@ export const getTransferHistory = actionClient
   })
   .action(
     async ({ parsedInput: { member_id, start_date, end_date, cell_id } }) => {
-      const response = await fetch(
-        `${baseUrl}cells/transfer/transfer-history`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${(await token).cookie}`,
-          },
-          body: JSON.stringify({
-            member_id,
-            start_date,
-            end_date,
-            cell_id,
-          }),
-        }
-      );
+      try {
+        const authHeader = await getAuthHeader();
 
-      console.log(response);
+        const response = await fetch(
+          `${baseUrl}cells/transfer/transfer-history`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              Authorization: authHeader,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              member_id,
+              start_date,
+              end_date,
+              cell_id,
+            }),
+          }
+        );
+
+        console.log(response.json(), "this is the respons sign");
+        return response.json();
+      } catch (error) {
+        console.log(error, "this na error");
+      }
     }
   );
 
-export const changeMemberStatus = actionClient
+export const changeCellMemberStatus = actionClient
   .schema(ChangeMemberStatus, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { member_id, remarks, new_status } }) => {
-    const response = await fetch(
-      `${baseUrl}cells/transfer/change-member-status`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${(await token).cookie}`,
-        },
-        body: JSON.stringify({
-          member_id,
-          remarks,
-          new_status,
-        }),
-      }
-    );
-    console.log(response);
+    const authHeader = await getAuthHeader();
+
+    try {
+      const response = await fetch(
+        `${baseUrl}api/v1/cells/transfer/change-member-status`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Authorization: authHeader,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            member_id,
+            remarks,
+            new_status,
+          }),
+        }
+      );
+
+      console.log(response, "this is the response");
+
+      return await response.json();
+    } catch (e) {
+      console.log(e, "this na error");
+      return e;
+      
+  }
   });
 
 export const transferHistoryByMemberId = actionClient
@@ -114,12 +131,16 @@ export const transferHistoryByMemberId = actionClient
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { member_id } }) => {
+    const authHeader = await getAuthHeader();
+
     const response = await fetch(
-      `${baseUrl}cells/transfer/member-transfer-history`,
+      `${baseUrl}api/v1/cells/transfer/member-transfer-history`,
       {
         method: "POST",
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${(await token).cookie}`,
+          Authorization: authHeader,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           member_id,
@@ -127,5 +148,8 @@ export const transferHistoryByMemberId = actionClient
       }
     );
 
-    console.log(response);
+    console.log(response, "this is the respons sign");
+    
+    return response.json();
   });
+

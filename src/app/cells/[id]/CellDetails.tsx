@@ -56,6 +56,8 @@ const CellDetail = ({
   });
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+
+
   const refreshData = useCallback(async () => {
     setIsRefreshing(true);
     getDetails({ id: data?.cell_id });
@@ -163,7 +165,7 @@ const CellDetail = ({
           ) : view === "members" ? (
             <>
               {" "}
-              <CellMembersCard cellData={cellData} />
+              <CellMembersCard cellData={cellData} refreshData={refreshData} />
             </>
           ) : view === "mitosis" ? (
             <>
