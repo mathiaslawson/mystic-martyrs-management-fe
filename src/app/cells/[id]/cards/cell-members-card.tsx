@@ -235,8 +235,7 @@ export default function CellMembersCard({ cellData, refreshData }: { cellData: C
         open={transferDialogOpen}
         onOpenChange={setTransferDialogOpen}
         selectedMember={selectedMember}
-        onSuccess={refreshData}
-        
+        onSuccess={refreshData}  
       />
 
       {/* Change Status Dialog */}

@@ -64,9 +64,42 @@ export interface History {
   cell: Omit<Cell, "leaders" | "members">;
 }
 
+export interface SubCells {
+  cell_id: string, 
+  fellowship_id: string, 
+  cell_name: string, 
+  super_cell_id: string
+  division_level: number,
+  became_fellowship: boolean,
+  created_at: string,
+  updated_at: string                           
+}
+
+
+
+export interface TransferHistory {
+  transfer_id: string;
+  member: { id: string;
+  name: string;
+  email: string;};
+  from_cell: {id: string;
+  name: string;
+  fellowship: string;};
+  to_cell: {id: string;
+  name: string;
+  fellowship: string;};
+  old_status: string;
+  new_status: string;
+  remarks: string;
+  transferred_by: string;
+  transfer_date: string; 
+}
+
 export interface CellData {
   cell: Cell;
   history: History[];
+  sub_cells: SubCells[];
+  transfer_history: TransferHistory[];
 }
 
 export interface EditCellDialogProps {
@@ -103,13 +136,3 @@ export interface MitosisCellDialogProps {
     };
   };
 }
-
-
-export type TransferHistory = {
-  id: string;
-  from_cell: string;
-  to_cell: string;
-  date: string;
-  remarks: string;
-};
-
