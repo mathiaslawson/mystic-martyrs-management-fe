@@ -11,16 +11,17 @@ import {
   getCellsByID,
   updateCell,
 } from "@/components/@Global/actions/cells";
-import CellInfoCard from "./cards/CellInfoCard";
+import CellInfoCard from "./cards/cell-info-card";
 
-import FellowshipInfoCard from "./cards/FellowshipInfoCard";
-import CellLeadersCard from "./cards/CellLeadersCard";
-import CellMembersCard from "./cards/CellMembersCard";
-import CellMitosisHistoryCard from "./cards/CellMitosisHistory";
+import FellowshipInfoCard from "./cards/fellowship-info-card";
+import CellLeadersCard from "./cards/cell-leaders-card";
+import CellMembersCard from "./cards/cell-members-card";
+import CellMitosisHistoryCard from "./cards/cell-mitosis-history";
 import EditCellDialog from "./dialogs/EditCellDialog";
 import DeleteCellDialog from "./dialogs/DeleteCellDialog";
 import MitosisCellDialog from "./dialogs/MitosisCellDialog";
 import CellHeader from "./CellHeader";
+import CellTransferHistory from "./cards/cell-transfer-history";
 
 const CellDetail = ({
   data,
@@ -55,8 +56,6 @@ const CellDetail = ({
     cell_leader_id: "",
   });
   const [isRefreshing, setIsRefreshing] = useState(false);
-
-
 
   const refreshData = useCallback(async () => {
     setIsRefreshing(true);
@@ -136,40 +135,65 @@ const CellDetail = ({
 
         <div className="border border-1 border-neutral-400 mt-3 mb-10 flex flex-row gap-1 rounded-md p-1 w-max transition-all">
           <div
-            className={`p-1 px-3 rounded-md cursor-pointer ${view === "bio" && "bg-green-600 text-white"} `}
+            className={`p-1 px-3 rounded-md cursor-pointer ${
+              view === "bio" && "bg-green-600 text-white"
+            } `}
             onClick={() => setView("bio")}
           >
             Bio Data
           </div>
           <div
             onClick={() => setView("mitosis")}
-            className={`p-1 px-3 rounded-md cursor-pointer ${view === "mitosis" && "bg-green-600 text-white"} `}
+            className={`p-1 px-3 rounded-md cursor-pointer ${
+              view === "mitosis" && "bg-green-600 text-white"
+            } `}
           >
             Mitosis
           </div>
           <div
             onClick={() => setView("members")}
-            className={`p-1 px-3 rounded-md cursor-pointer ${view === "members" && "bg-green-600 text-white"} `}
+            className={`p-1 px-3 rounded-md cursor-pointer ${
+              view === "members" && "bg-green-600 text-white"
+            } `}
           >
             Member Management
           </div>
+          <div
+            onClick={() => setView("transfer")}
+            className={`p-1 px-3 rounded-md cursor-pointer ${
+              view === "transfer" && "bg-green-600 text-white"
+            } `}
+          >
+            Transfer History
+          </div>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-12 lg:grid-cols-3 mb-8">
+        <div className="">
           {view === "bio" ? (
             <>
-              <CellInfoCard cellData={cellData} />
-              <FellowshipInfoCard cellData={cellData} />
-              <CellLeadersCard cellData={cellData} />
+              <div className="grid gap-8 md:grid-cols-12 lg:grid-cols-3 mb-8">
+                <CellInfoCard cellData={cellData} />
+                <FellowshipInfoCard cellData={cellData} />
+                <CellLeadersCard cellData={cellData} />
+              </div>
             </>
           ) : view === "members" ? (
             <>
               {" "}
-              <CellMembersCard cellData={cellData} refreshData={refreshData} />
+              <div>
+                <CellMembersCard
+                  cellData={cellData}
+                  refreshData={refreshData}
+                />
+              </div>
             </>
           ) : view === "mitosis" ? (
             <>
               <CellMitosisHistoryCard cellData={cellData} />
+            </>
+          ) : view === "transfer" ? (
+            <>
+              <CellTransferHistory cellData={cellData} />
             </>
           ) : (
             <>{setView("bio")}</>
