@@ -9,9 +9,21 @@ import {
   recordUpdateExamsResultSchema,
 } from "@/schemas/cells/examinations";
 
-const baseUrl = `https://mystic-be.vercel.app/api/v1`;
+const baseUrl =
+  process.env.NODE_ENV === "development"
+    ? `http://localhost:3000/`
+    : `https://mystic-be.vercel.app/`;
 
 const token = getServerSideCookie({ cookieName: "access_token" });
+
+const getAuthHeader = async () => {
+  const token = await getServerSideCookie({ cookieName: "access_token" });
+  console.log("this is token", token.cookie);
+  if (!token) {
+    throw new Error("User not authenticated");
+  }
+  return `Bearer ${token.cookie}`;
+};
 
 export const createExamination = actionClient
   .schema(createExaminationSchema, {
@@ -20,19 +32,22 @@ export const createExamination = actionClient
   })
   .action(async ({ parsedInput: { cell_id, title, created_by_id, date } }) => {
     try {
-      const response = await fetch(`${baseUrl}/cells/mitosis/divide`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${(await token).cookie}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cell_id,
-          date,
-          created_by_id,
-          title,
-        }),
-      });
+      const response = await fetch(
+        `${baseUrl}api/v1/cells/examinations/create-exam`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${(await token).cookie}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cell_id,
+            date,
+            created_by_id,
+            title,
+          }),
+        }
+      );
 
       const data = await response.json();
       console.log("API Response:", data);
@@ -58,37 +73,27 @@ export const recordUpdateExamsResult = actionClient
     async ({
       parsedInput: { exam_id, remarks, score, recorded_by, member_id },
     }) => {
-      try {
-        const response = await fetch(
-          `${baseUrl}/cells/examinations/record-result`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${(await token).cookie}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              remarks,
-              exam_id,
-              score,
-              recorded_by,
-              member_id,
-            }),
-          }
-        );
-
-        const data = await response.json();
-        console.log("API Response:", data);
-
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to Divide Cell");
+      const authHeader = await getAuthHeader();
+      const response = await fetch(
+        `${baseUrl}api/v1/cells/examinations/record-result`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: authHeader,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            remarks,
+            exam_id,
+            score,
+            recorded_by,
+            member_id,
+          }),
         }
+      );
 
-        return data;
-      } catch (error) {
-        console.error("API Error:", error);
-        throw error;
-      }
+      console.log(response);
+      return await response.json();
     }
   );
 
@@ -98,12 +103,14 @@ export const getExamResultsDashboard = actionClient
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { exam_id } }) => {
+    const authHeader = await getAuthHeader();
     const response = await fetch(
-      `${baseUrl}/cells/examinations/exams-result-list`,
+      `${baseUrl}api/v1/cells/examinations/exams-result-list`,
       {
-        method: "GET",
+        method: "POST",
         headers: {
-          Authorization: `Bearer ${(await token).cookie}`,
+          Authorization: authHeader,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           exam_id,
@@ -121,12 +128,15 @@ export const getAllExaminations = actionClient
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput: { cell_id } }) => {
+    const authHeader = await getAuthHeader();
+
     const response = await fetch(
-      `${baseUrl}/cells/examinations/get-all-examinations`,
+      `${baseUrl}api/v1/cells/examinations/get-all-examinations`,
       {
-        method: "GET",
+        method: "POST",
         headers: {
-          Authorization: `Bearer ${(await token).cookie}`,
+          Authorization: authHeader,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           cell_id,
@@ -134,6 +144,5 @@ export const getAllExaminations = actionClient
       }
     );
 
-    console.log(response);
-    return await response.json();
+    return response.json();
   });

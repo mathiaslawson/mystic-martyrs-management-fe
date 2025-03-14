@@ -95,7 +95,7 @@ export function ChangeStatusDialog({ open, onOpenChange, selectedMember, refresh
               <SelectContent>
                 <SelectItem value="ACTIVE">ACTIVE</SelectItem>
                 <SelectItem value="INACTIVE">INACTIVE</SelectItem>
-                <SelectItem value="TRANSFERRED">TRANSFERRED</SelectItem>
+                {/* <SelectItem value="TRANSFERRED">TRANSFERRED</SelectItem> */}
                 <SelectItem value="LEFT">LEFT</SelectItem>
               </SelectContent>
             </Select>

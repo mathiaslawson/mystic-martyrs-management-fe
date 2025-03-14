@@ -1,14 +1,18 @@
-import type { Metadata } from "next";
-import "../globals.css";
-import LayoutContent from "../LayoutContent";
+import type React from "react"
+import type { Metadata } from "next"
+import LayoutContent from "../LayoutContent"
 
 export const metadata: Metadata = {
   title: "Mystic Online",
   description: "Built by Mystics for Mystics",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
-  return <LayoutContent>{children}</LayoutContent>;
 }
+
+interface LayoutProps {
+  children: React.ReactNode
+  types: string[] 
+}
+
+export default function RootLayout({ children }: LayoutProps) {
+  return <LayoutContent>{children}</LayoutContent>
+}
+

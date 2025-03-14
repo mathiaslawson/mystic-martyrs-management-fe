@@ -102,6 +102,11 @@ export default function CellTransferHistory({
             ))}
           </TableBody>
         </Table>
+        <div className="mt-10 mb-10 flex justify-center">
+            {paginatedData.length === 0 && <>
+            <div className="text-neutral-400">No Transfers</div>
+            </>}
+        </div>
         <div className="flex justify-between items-center mt-4">
           <Button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
