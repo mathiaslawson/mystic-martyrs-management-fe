@@ -33,7 +33,7 @@
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.447.0",
     "mystic-online-fe": "file:",
-    "next": "14.2.14",
+    "next": "14.2.24",
     "next-safe-action": "^7.9.3",
     "next-themes": "^0.3.0",
     "react": "^18",
