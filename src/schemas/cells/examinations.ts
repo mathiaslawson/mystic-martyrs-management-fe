@@ -11,7 +11,7 @@ export const recordUpdateExamsResultSchema = z.object({
     exam_id: z.string(), 
     remarks: z.string(), 
     score: z.number(), 
-    recorded_by: z.number(), 
+    recorded_by: z.string(), 
     member_id: z.string(),
 })
 
