@@ -113,6 +113,7 @@ export function AttendanceForm() {
       member_id: selectedMember.value,
       date: date.toISOString(),
       is_present: isPresent,
+      remarks: isPresent ? "Was available for meeting": "Was unavailable for meeting", 
     };
 
     try {

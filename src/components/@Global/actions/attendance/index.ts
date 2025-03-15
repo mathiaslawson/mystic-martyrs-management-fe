@@ -11,6 +11,12 @@ import {
 } from "@/schemas/cells/attendance";
 import { flattenValidationErrors } from "next-safe-action";
 
+
+const baseUrl =
+  process.env.NODE_ENV === "development"
+    ? `http://localhost:3000/`
+    : `https://mystic-be.vercel.app/`;
+
 const getAuthHeader = async () => {
   const token = await getServerSideCookie({ cookieName: "access_token" });
   console.log("this is token", token.cookie);
@@ -26,11 +32,11 @@ export const recordAttendance = actionClient
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async ({ parsedInput: { cell_id, member_id, date, is_present } }) => {
+  .action(async ({ parsedInput: { cell_id, member_id, date, is_present , remarks} }) => {
     const authHeader = await getAuthHeader();
 
     const response = await fetch(
-      `https://mystic-be.vercel.app/api/v1/cells/record-attendance`,
+      `${baseUrl}api/v1/cells/record-attendance`,
       {
         method: "POST",
         credentials: "include",
@@ -43,9 +49,13 @@ export const recordAttendance = actionClient
           member_id,
           date,
           is_present,
+          remarks
         }),
       }
     );
+
+    console.log(response, 'this is the record reponse')
+
     return response.json();
   });
 

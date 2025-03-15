@@ -5,6 +5,7 @@ export const RecordAttendance = z.object({
   member_id: z.string(),
   date: z.string(),
   is_present: z.boolean(),
+  remarks: z.string()
 });
 
 export const AttendanceRecords = z.object({

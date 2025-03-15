@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const fullPerformanceMetrics = z.object({
-  cell_id: z.string().nullable(),
-  start_date: z.string(),
-  end_date: z.string(),
+  start_date: z.preprocess((val) => new Date(val as string), z.date()),
+  end_date: z.preprocess((val) => new Date(val as string), z.date()),
+  cell_id: z.string().optional(), 
 });

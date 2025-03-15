@@ -20,6 +20,7 @@ import {
 } from "lucide-react"
 import { useAuthMemberStore } from "@/utils/stores/AuthMember/AuthMemberStore"
 import { cn } from "@/lib/utils"
+import { FileChartColumn } from 'lucide-react';
 
 // Updated AdminItems with nested structure for submenus
 const AdminItems = [
@@ -30,6 +31,7 @@ const AdminItems = [
   { name: "Members", href: "/members", icon: Radar },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },
   { name: "Examinations", href: "/examinations", icon: BookOpenCheck },
+  { name: "Performance", href: "/performance", icon: FileChartColumn },
   { name: "Logout", href: "/logout", icon: ArrowLeftIcon },
 ]
 
@@ -39,8 +41,8 @@ const CellLeaderItems = [
     name: "Attendance",
     icon: Radar,
     subItems: [
-      { name: "Attendance Records", href: "/attendance/attendance-records", icon: Radar },
-      { name: "Cell Attendance Statistics", href: "/attendance/cell-member-stats", icon: Radar },
+      { name: "Attendance Records", href: "/cells/attendance/attendance-records", icon: Radar },
+      { name: "Cell Attendance Statistics", href: "/cells/attendance/cell-member-stats", icon: Radar },
     ],
   },
   { name: "Invitations", href: "/invitation", icon: UserRoundPlus },

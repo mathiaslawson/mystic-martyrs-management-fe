@@ -22,6 +22,7 @@ import DeleteCellDialog from "./dialogs/DeleteCellDialog";
 import MitosisCellDialog from "./dialogs/MitosisCellDialog";
 import CellHeader from "./CellHeader";
 import CellTransferHistory from "./cards/cell-transfer-history";
+import CellPerformanceAnalytics from "./performance";
 
 const CellDetail = ({
   data,
@@ -166,6 +167,14 @@ const CellDetail = ({
           >
             Transfer History
           </div>
+           <div
+            onClick={() => setView("overall")}
+            className={`p-1 px-3 rounded-md cursor-pointer ${
+              view === "overall" && "bg-green-600 text-white"
+            } `}
+          >
+            Overall Cell Performance
+          </div>
         </div>
 
         <div className="">
@@ -195,7 +204,13 @@ const CellDetail = ({
             <>
               <CellTransferHistory cellData={cellData} />
             </>
-          ) : (
+          ) 
+          : view === "overall" ? (
+            <>
+              <CellPerformanceAnalytics cellData={cellData} />
+            </>
+          ) :
+          (
             <>{setView("bio")}</>
           )}
         </div>
